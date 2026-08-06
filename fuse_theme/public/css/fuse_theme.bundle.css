@@ -1,0 +1,702 @@
+/* ==============================================================================
+   fuse_theme — fuse_theme.bundle.css (v0.1.0)
+
+   Fuse Manufacturing look and feel for Frappe / ERPNext v16.
+   Tokens lifted verbatim from the donor app's own theme
+   (SBMS/assets/css/fuse-theme.css — "Sage Intacct inspired, base green #007E45")
+   so the two products read as the same family.
+
+   RULE: style, do not restructure.
+   This file sets Frappe's own CSS variables and restyles existing components.
+   It does NOT move, hide or rebuild any part of the desk layout — that is what
+   survives a framework upgrade.
+   ============================================================================== */
+
+
+/* ==============================================================================
+   1. TOKENS — the donor palette, mapped onto Frappe's variables
+   ============================================================================== */
+
+:root {
+	/* Brand. Resting green is 5.16:1 on white (WCAG AA). */
+	--fuse-green:        #007E45;
+	--fuse-green-dark:   #006034;   /* hover / pressed — darkens, keeps contrast */
+	--fuse-green-bright: #1FA060;   /* accents, success, icon chips */
+	--fuse-green-tint:   #E7F4ED;
+	--fuse-green-tint-2: #D2E9DD;
+
+	/* Neutrals */
+	--fuse-ink:           #16241C;  /* primary text   ~14:1 on white */
+	--fuse-ink-2:         #3A4A42;  /* headings on tinted surfaces */
+	--fuse-muted:         #66756D;  /* secondary text ~4.6:1 on white (AA) */
+	--fuse-bg:            #F4F7F5;
+	--fuse-surface:       #FFFFFF;
+	--fuse-surface-2:     #FAFCFB;
+	--fuse-border:        #DCE5E0;
+	--fuse-border-strong: #C4D2CB;
+
+	/* Status */
+	--fuse-danger:      #C62828;
+	--fuse-danger-bg:   #FDECEC;
+	--fuse-warn:        #92400E;
+	--fuse-warn-bg:     #FEF3C7;
+	--fuse-warn-border: #F5D68A;
+	--fuse-info-bg:     #E7F4ED;
+
+	/* Accent — CTA highlight, used sparingly */
+	--fuse-accent: #C2620A;
+
+	/* Shape */
+	--fuse-r-sm:   4px;
+	--fuse-r:      8px;
+	--fuse-r-lg:  12px;
+	--fuse-r-pill: 999px;
+
+	/* Elevation — one consistent scale */
+	--fuse-e1: 0 1px 2px rgba(22, 36, 28, .06), 0 1px 3px rgba(22, 36, 28, .05);
+	--fuse-e2: 0 2px 6px rgba(22, 36, 28, .07), 0 4px 12px rgba(22, 36, 28, .06);
+	--fuse-e3: 0 8px 28px rgba(22, 36, 28, .14);
+
+	/* Motion */
+	--fuse-t: 180ms cubic-bezier(.2, .6, .3, 1);
+}
+
+
+/* ------------------------------------------------------------------------------
+   1a. Frappe's variables, pointed at the Fuse palette.
+
+   Setting these is what does most of the work: the desk, list views, forms,
+   dialogs and reports all read from them, so they follow without being touched
+   individually.
+   ------------------------------------------------------------------------------ */
+
+:root,
+html[data-theme="light"] {
+	--bg-color:      var(--fuse-bg);
+	--fg-color:      var(--fuse-surface);
+	--card-bg:       var(--fuse-surface);
+	--subtle-fg:     var(--fuse-surface-2);
+	--control-bg:    var(--fuse-surface);
+	--disabled-control-bg: var(--fuse-surface-2);
+
+	--border-color:  var(--fuse-border);
+	--card-border:   var(--fuse-border);
+	--dark-border-color: var(--fuse-border-strong);
+
+	--text-color:    var(--fuse-ink);
+	--heading-color: var(--fuse-ink);
+	--text-muted:    var(--fuse-muted);
+	--text-light:    var(--fuse-muted);
+	--invert-fg:     #FFFFFF;
+
+	--primary:           var(--fuse-green);
+	--primary-color:     var(--fuse-green);
+	--primary-hover:     var(--fuse-green-dark);
+	--btn-primary-bg:    var(--fuse-green);
+	--btn-primary-color: #FFFFFF;
+
+	--accent-color:  var(--fuse-green-bright);
+	--success-color: var(--fuse-green-bright);
+	--warning-color: var(--fuse-warn);
+	--error-color:   var(--fuse-danger);
+	--danger-color:  var(--fuse-danger);
+
+	--shadow-sm: var(--fuse-e1);
+	--shadow-md: var(--fuse-e2);
+	--shadow-lg: var(--fuse-e3);
+
+	--border-radius:    var(--fuse-r-sm);
+	--border-radius-md: var(--fuse-r);
+	--border-radius-lg: var(--fuse-r-lg);
+	--border-radius-full: var(--fuse-r-pill);
+
+	--navbar-bg: var(--fuse-green);
+	--navbar-height: 56px;
+}
+
+
+/* ------------------------------------------------------------------------------
+   1b. Dark mode.
+
+   The donor has no dark mode, but Frappe ships a toggle. Leaving it unstyled
+   looks broken, so the palette is re-derived on a dark ground rather than
+   invented: greens lift for contrast, the ink/surface pair inverts.
+   ------------------------------------------------------------------------------ */
+
+html[data-theme="dark"] {
+	--fuse-green:        #2E9E67;
+	--fuse-green-dark:   #3FB27A;   /* on a dark ground, hover LIFTS rather than darkens */
+	--fuse-green-bright: #56C88C;
+	--fuse-green-tint:   #16281F;
+	--fuse-green-tint-2: #1D3529;
+
+	--fuse-ink:           #E6EDE9;
+	--fuse-ink-2:         #C7D4CD;
+	--fuse-muted:         #93A49B;
+	--fuse-bg:            #121815;
+	--fuse-surface:       #1A211D;
+	--fuse-surface-2:     #212A25;
+	--fuse-border:        #2E3A34;
+	--fuse-border-strong: #3E4C45;
+
+	--fuse-danger:    #EF6B6B;
+	--fuse-danger-bg: #2C1A1A;
+	--fuse-warn:      #E0B063;
+	--fuse-warn-bg:   #2B2416;
+	--fuse-info-bg:   #16281F;
+
+	--fuse-e1: 0 1px 2px rgba(0, 0, 0, .30);
+	--fuse-e2: 0 2px 8px rgba(0, 0, 0, .45);
+	--fuse-e3: 0 8px 28px rgba(0, 0, 0, .55);
+
+	--btn-primary-color: #0B120E;
+}
+
+
+/* ==============================================================================
+   2. BASE
+   ============================================================================== */
+
+body {
+	background: var(--fuse-bg);
+	color: var(--fuse-ink);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+/* Numbers line up in every table, report and total. The donor does the same —
+   on stock quantities and costs it is the difference between scannable and not. */
+table,
+.list-row,
+.report-wrapper,
+.dt-cell,
+.fuse-num {
+	font-variant-numeric: tabular-nums;
+	font-feature-settings: "tnum" 1;
+}
+
+a {
+	color: var(--fuse-green);
+	transition: color var(--fuse-t);
+}
+
+a:hover,
+a:focus {
+	color: var(--fuse-green-dark);
+}
+
+/* Visible focus for keyboard users, on every interactive element. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+	outline: 2px solid var(--fuse-green-bright);
+	outline-offset: 2px;
+	border-radius: var(--fuse-r-sm);
+}
+
+
+/* ==============================================================================
+   3. NAVBAR — the green bar
+
+   The donor's top bar is a vertical gradient from the base green to the dark
+   green, sticky, with a soft shadow. Same treatment here.
+   ============================================================================== */
+
+.navbar,
+header.navbar {
+	background: linear-gradient(180deg, var(--fuse-green) 0%, var(--fuse-green-dark) 100%);
+	border-bottom: none;
+	box-shadow: var(--fuse-e2);
+	min-height: 56px;
+}
+
+/* Everything sitting in the bar goes white — links, icons, the app name. */
+.navbar .navbar-brand,
+.navbar .navbar-nav > li > a,
+.navbar .nav-link,
+.navbar .navbar-nav .dropdown-toggle,
+.navbar a,
+.navbar .es-icon,
+.navbar svg.icon use,
+.navbar .icon-xs,
+.navbar .icon-sm,
+.navbar .icon-md {
+	color: #FFFFFF !important;
+	fill: currentColor;
+	stroke: currentColor;
+}
+
+.navbar .navbar-brand {
+	font-weight: 650;
+	letter-spacing: -.01em;
+}
+
+/* Hover / open states read as a slightly darker well rather than a colour change,
+   which is what the donor's icon buttons do. */
+.navbar .nav-link:hover,
+.navbar .navbar-nav > li > a:hover,
+.navbar .dropdown-toggle:hover,
+.navbar .nav-link[aria-expanded="true"] {
+	background: rgba(0, 0, 0, .18);
+	border-radius: var(--fuse-r);
+	color: #FFFFFF !important;
+}
+
+/* The search box sits on green, so it needs its own treatment — a translucent
+   well with white text, not the default white input. */
+.navbar .search-bar .awesomplete input,
+.navbar #navbar-search,
+.navbar .form-control {
+	background: rgba(0, 0, 0, .16);
+	border: 1px solid rgba(255, 255, 255, .24);
+	color: #FFFFFF;
+	border-radius: var(--fuse-r);
+	transition: background var(--fuse-t), border-color var(--fuse-t);
+}
+
+.navbar .search-bar .awesomplete input::placeholder,
+.navbar #navbar-search::placeholder,
+.navbar .form-control::placeholder {
+	color: rgba(255, 255, 255, .72);
+}
+
+.navbar .search-bar .awesomplete input:focus,
+.navbar #navbar-search:focus,
+.navbar .form-control:focus {
+	background: rgba(0, 0, 0, .28);
+	border-color: rgba(255, 255, 255, .48);
+	box-shadow: none;
+	color: #FFFFFF;
+}
+
+/* The avatar chip — the donor's pill-shaped user chip. */
+.navbar .avatar,
+.navbar .avatar-frame {
+	border-radius: var(--fuse-r-pill);
+	box-shadow: 0 0 0 1px rgba(255, 255, 255, .30);
+}
+
+/* Dropdowns hang off a green bar but are ordinary surfaces themselves — reset
+   the inherited white text or they come out invisible. */
+.navbar .dropdown-menu {
+	background: var(--fuse-surface);
+	border: 1px solid var(--fuse-border);
+	border-radius: var(--fuse-r);
+	box-shadow: var(--fuse-e3);
+}
+
+.navbar .dropdown-menu a,
+.navbar .dropdown-menu .dropdown-item {
+	color: var(--fuse-ink) !important;
+}
+
+.navbar .dropdown-menu .dropdown-item:hover {
+	background: var(--fuse-green-tint);
+	color: var(--fuse-ink) !important;
+}
+
+
+/* ==============================================================================
+   4. SIDEBAR — collapsible module nav
+
+   Frappe's sidebar already collapses. This restyles it to the donor's nav:
+   tinted active state with a green rail, quiet hover, no heavy borders.
+   ============================================================================== */
+
+.layout-side-section,
+.desk-sidebar,
+.sidebar-container {
+	background: var(--fuse-surface);
+	border-right: 1px solid var(--fuse-border);
+}
+
+.sidebar-item-container .desk-sidebar-item,
+.standard-sidebar-item {
+	border-radius: var(--fuse-r);
+	color: var(--fuse-ink-2);
+	transition: background var(--fuse-t), color var(--fuse-t);
+}
+
+.sidebar-item-container .desk-sidebar-item:hover,
+.standard-sidebar-item:hover {
+	background: var(--fuse-surface-2);
+	color: var(--fuse-ink);
+}
+
+/* Active item: tinted ground plus a green rail down the left edge. */
+.sidebar-item-container.selected > .desk-sidebar-item,
+.standard-sidebar-item.selected {
+	background: var(--fuse-green-tint);
+	color: var(--fuse-green-dark);
+	font-weight: 550;
+	box-shadow: inset 3px 0 0 var(--fuse-green);
+}
+
+.sidebar-item-container.selected > .desk-sidebar-item a,
+.standard-sidebar-item.selected a,
+.standard-sidebar-item.selected .sidebar-item-label {
+	color: var(--fuse-green-dark);
+}
+
+/* Section headings above groups of links. */
+.standard-sidebar-section .sidebar-group-title,
+.sidebar-section-title {
+	color: var(--fuse-muted);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: .04em;
+	text-transform: uppercase;
+}
+
+/* The collapse chevron should turn, not jump. */
+.sidebar-item-control .drop-icon,
+.standard-sidebar-item .drop-icon {
+	transition: transform var(--fuse-t);
+}
+
+
+/* ==============================================================================
+   5. TILES — workspace shortcuts and cards
+
+   The donor dashboard is a grid of tiles: white surface, 12px radius, hairline
+   border, soft shadow, icon chip in green tint, lifting on hover.
+   ============================================================================== */
+
+.widget,
+.widget.shortcut-widget-box,
+.widget.links-widget-box,
+.widget.number-widget-box,
+.widget.onboarding-widget-box {
+	background: var(--fuse-surface);
+	border: 1px solid var(--fuse-border);
+	border-radius: var(--fuse-r-lg);
+	box-shadow: var(--fuse-e1);
+	transition: box-shadow var(--fuse-t), border-color var(--fuse-t), transform var(--fuse-t);
+}
+
+.widget.shortcut-widget-box:hover,
+.widget.links-widget-box:hover,
+.widget.number-widget-box:hover {
+	box-shadow: var(--fuse-e2);
+	border-color: var(--fuse-border-strong);
+	transform: translateY(-1px);
+}
+
+.widget .widget-head .widget-title,
+.widget .widget-head .widget-label {
+	color: var(--fuse-ink);
+	font-weight: 600;
+	letter-spacing: -.01em;
+}
+
+.widget .widget-subtitle,
+.widget .widget-head .widget-subtitle {
+	color: var(--fuse-muted);
+	font-size: 13px;
+}
+
+/* Icon chip — soft green square behind the glyph, as on every donor tile. */
+.widget .widget-head .widget-icon,
+.widget .shortcut-icon,
+.widget .indicator-pill-icon {
+	background: var(--fuse-green-tint);
+	color: var(--fuse-green-dark);
+	border-radius: var(--fuse-r);
+}
+
+/* The big number on a count tile. */
+.widget.number-widget-box .widget-content .number,
+.widget .number-card-value {
+	color: var(--fuse-ink);
+	font-variant-numeric: tabular-nums;
+	letter-spacing: -.02em;
+}
+
+/* Page heading above the tile grid — the donor pairs a bold title with a quiet
+   one-line blurb on the same baseline. */
+.page-head .page-title .title-text,
+.page-title h3 {
+	color: var(--fuse-ink);
+	font-weight: 650;
+	letter-spacing: -.01em;
+}
+
+
+/* ==============================================================================
+   6. GRIDVIEWS — list view, report view, child tables
+
+   Restyled, not replaced. Frappe's list is a real framework component; swapping
+   it out is what fights every upgrade.
+   ============================================================================== */
+
+.list-row-head,
+.dt-header,
+.report-wrapper .dt-header {
+	background: var(--fuse-surface-2);
+	border-bottom: 1px solid var(--fuse-border-strong);
+	color: var(--fuse-muted);
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: .02em;
+	text-transform: uppercase;
+}
+
+.list-row {
+	border-bottom: 1px solid var(--fuse-border);
+	transition: background var(--fuse-t);
+}
+
+.list-row:hover,
+.list-row-container:hover .list-row {
+	background: var(--fuse-green-tint);
+}
+
+.list-row-container.selected .list-row,
+.list-row.selected {
+	background: var(--fuse-green-tint-2);
+}
+
+.list-subject .level-item .ellipsis,
+.list-row .list-subject a {
+	color: var(--fuse-ink);
+	font-weight: 550;
+}
+
+/* Frappe's datatable (report view, child grids). */
+.datatable .dt-cell {
+	border-color: var(--fuse-border);
+}
+
+.datatable .dt-cell--header {
+	background: var(--fuse-surface-2);
+	color: var(--fuse-muted);
+}
+
+.datatable .dt-row:hover .dt-cell {
+	background: var(--fuse-green-tint);
+}
+
+.datatable .dt-cell--focus {
+	outline: 2px solid var(--fuse-green-bright);
+	outline-offset: -2px;
+}
+
+/* Child table grid rows on a form. */
+.grid-heading-row {
+	background: var(--fuse-surface-2);
+	color: var(--fuse-muted);
+	border-bottom: 1px solid var(--fuse-border-strong);
+}
+
+.grid-row:hover {
+	background: var(--fuse-green-tint);
+}
+
+
+/* ==============================================================================
+   7. BUTTONS
+   ============================================================================== */
+
+.btn {
+	border-radius: var(--fuse-r);
+	font-weight: 550;
+	transition: background var(--fuse-t), border-color var(--fuse-t), color var(--fuse-t);
+}
+
+.btn-primary,
+.btn.btn-primary {
+	background: var(--fuse-green);
+	border-color: var(--fuse-green);
+	color: #FFFFFF;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn.btn-primary:not(:disabled):not(.disabled):active {
+	background: var(--fuse-green-dark);
+	border-color: var(--fuse-green-dark);
+	color: #FFFFFF;
+}
+
+.btn-secondary,
+.btn-default {
+	background: var(--fuse-surface);
+	border: 1px solid var(--fuse-border-strong);
+	color: var(--fuse-ink);
+}
+
+.btn-secondary:hover,
+.btn-default:hover {
+	background: var(--fuse-surface-2);
+	border-color: var(--fuse-muted);
+	color: var(--fuse-ink);
+}
+
+.btn-danger {
+	background: var(--fuse-danger);
+	border-color: var(--fuse-danger);
+	color: #FFFFFF;
+}
+
+
+/* ==============================================================================
+   8. FORMS
+   ============================================================================== */
+
+.form-control,
+.input-with-feedback,
+.control-input input,
+.control-input select,
+.control-input textarea {
+	border-radius: var(--fuse-r-sm);
+	border-color: var(--fuse-border-strong);
+	color: var(--fuse-ink);
+	background: var(--fuse-surface);
+	transition: border-color var(--fuse-t), box-shadow var(--fuse-t);
+}
+
+.form-control:focus,
+.control-input input:focus,
+.control-input select:focus,
+.control-input textarea:focus {
+	border-color: var(--fuse-green);
+	box-shadow: 0 0 0 3px rgba(0, 126, 69, .12);
+}
+
+.control-label,
+.form-section .section-head {
+	color: var(--fuse-muted);
+	font-weight: 600;
+}
+
+.form-section,
+.form-page .form-section {
+	border-color: var(--fuse-border);
+}
+
+/* The white card a form sits on. */
+.form-layout,
+.frappe-card,
+.widget-group,
+.page-form {
+	background: var(--fuse-surface);
+	border: 1px solid var(--fuse-border);
+	border-radius: var(--fuse-r-lg);
+	box-shadow: var(--fuse-e1);
+}
+
+
+/* ==============================================================================
+   9. STATUS — indicators, alerts, dialogs
+
+   Frappe colours indicators by name (green / red / orange / blue / grey).
+   Only the ones the donor has an opinion about are overridden.
+   ============================================================================== */
+
+.indicator-pill.green,
+.indicator-pill-right.green,
+.indicator.green::before {
+	background: var(--fuse-green-tint);
+	color: var(--fuse-green-dark);
+}
+
+.indicator-pill.red,
+.indicator-pill-right.red {
+	background: var(--fuse-danger-bg);
+	color: var(--fuse-danger);
+}
+
+.indicator-pill.orange,
+.indicator-pill.yellow {
+	background: var(--fuse-warn-bg);
+	color: var(--fuse-warn);
+	border-color: var(--fuse-warn-border);
+}
+
+.alert-success,
+.msgprint .green {
+	background: var(--fuse-info-bg);
+	border-color: var(--fuse-green-tint-2);
+	color: var(--fuse-green-dark);
+}
+
+.alert-danger {
+	background: var(--fuse-danger-bg);
+	border-color: var(--fuse-danger);
+	color: var(--fuse-danger);
+}
+
+.alert-warning {
+	background: var(--fuse-warn-bg);
+	border-color: var(--fuse-warn-border);
+	color: var(--fuse-warn);
+}
+
+.modal-content,
+.modal-dialog .modal-content {
+	border-radius: var(--fuse-r-lg);
+	border: 1px solid var(--fuse-border);
+	box-shadow: var(--fuse-e3);
+}
+
+.modal-header {
+	border-bottom: 1px solid var(--fuse-border);
+}
+
+.modal-footer {
+	border-top: 1px solid var(--fuse-border);
+	background: var(--fuse-surface-2);
+	border-bottom-left-radius: var(--fuse-r-lg);
+	border-bottom-right-radius: var(--fuse-r-lg);
+}
+
+
+/* ==============================================================================
+   10. MOBILE
+
+   The scanner flows are used one-handed on the floor. Touch targets get the
+   44px minimum there; the desk keeps its density.
+   ============================================================================== */
+
+@media (max-width: 767px) {
+
+	.btn,
+	.list-row,
+	.standard-sidebar-item,
+	.navbar .nav-link {
+		min-height: 44px;
+	}
+
+	.btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.widget,
+	.widget.shortcut-widget-box {
+		border-radius: var(--fuse-r);
+	}
+}
+
+
+/* ==============================================================================
+   11. PRINT — drop the chrome, keep the numbers
+   ============================================================================== */
+
+@media print {
+
+	.navbar,
+	.layout-side-section,
+	.page-actions {
+		display: none !important;
+	}
+
+	body {
+		background: #FFFFFF;
+	}
+}
