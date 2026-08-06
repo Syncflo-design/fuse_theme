@@ -415,13 +415,59 @@ header.navbar {
 	letter-spacing: -.02em;
 }
 
-/* Page heading above the tile grid — the donor pairs a bold title with a quiet
-   one-line blurb on the same baseline. */
+/* ── Page header band ────────────────────────────────────────────────────────
+   A flat white header leaves the title, the breadcrumb and the form all sitting
+   on the same surface, so nothing separates "where I am" from "what I'm editing".
+   A tinted band with a green hairline under it does that with colour rather than
+   with layout, so it survives upgrades. */
+.page-head {
+	background: linear-gradient(180deg, var(--fuse-green-tint) 0%, var(--fuse-surface-2) 100%);
+	border-bottom: 2px solid var(--fuse-green-tint-2);
+	box-shadow: var(--fuse-e1);
+}
+
 .page-head .page-title .title-text,
 .page-title h3 {
 	color: var(--fuse-ink);
 	font-weight: 650;
 	letter-spacing: -.01em;
+}
+
+/* Breadcrumbs: the current page is where you are, the trail is how you got here —
+   they should not be the same weight. */
+#navbar-breadcrumbs > li > a,
+.page-head .breadcrumb a {
+	color: var(--fuse-muted);
+}
+
+#navbar-breadcrumbs > li > a:hover,
+.page-head .breadcrumb a:hover {
+	color: var(--fuse-green-dark);
+}
+
+#navbar-breadcrumbs > li:last-child > a,
+.page-head .breadcrumb .active {
+	color: var(--fuse-ink);
+	font-weight: 600;
+}
+
+/* Section headings inside a form, marked with a green rule so a long form reads as
+   a set of parts rather than one continuous run of fields. */
+.form-section .section-head,
+.form-tabs-wrapper .section-head {
+	color: var(--fuse-ink-2);
+	border-left: 3px solid var(--fuse-green);
+	padding-left: 10px;
+	text-transform: none;
+	letter-spacing: 0;
+}
+
+/* The active form tab gets the brand underline instead of a grey one. */
+.form-tabs .nav-link.active,
+.nav-tabs .nav-link.active {
+	color: var(--fuse-green-dark);
+	border-bottom: 2px solid var(--fuse-green);
+	font-weight: 600;
 }
 
 
@@ -567,10 +613,84 @@ header.navbar {
 	box-shadow: 0 0 0 3px rgba(0, 126, 69, .12);
 }
 
+/* Labels carry the field's identity, so they get real contrast — muted grey on white
+   is legible in isolation and hard work across a dense form. */
 .control-label,
 .form-section .section-head {
-	color: var(--fuse-muted);
+	color: var(--fuse-ink-2);
 	font-weight: 600;
+	font-size: 12.5px;
+	letter-spacing: .01em;
+}
+
+/* Required marker, actually visible. */
+.control-label .reqd,
+.control-label > .text-danger,
+.reqd > .control-label::after {
+	color: var(--fuse-danger);
+	font-weight: 700;
+}
+
+/* ── Fields must look like fields ────────────────────────────────────────────
+   Frappe renders a value as plain text (.like-disabled-input) and only swaps in a
+   real input on focus. That is elegant on a sparse form and unusable on a dense
+   one: an EMPTY field renders as blank space with no edge, so there is nothing to
+   tell you it is there, let alone that it is editable.
+
+   These give every field a resting edge and a minimum height, so the form reads as
+   a form whether or not it has data in it. */
+.control-value.like-disabled-input,
+.like-disabled-input {
+	background: var(--fuse-surface-2);
+	border: 1px solid var(--fuse-border);
+	border-radius: var(--fuse-r-sm);
+	color: var(--fuse-ink);
+	min-height: 32px;
+	padding: 5px 10px;
+	transition: border-color var(--fuse-t), background var(--fuse-t);
+}
+
+.control-value.like-disabled-input:hover,
+.like-disabled-input:hover {
+	border-color: var(--fuse-border-strong);
+	background: var(--fuse-surface);
+	cursor: text;
+}
+
+/* An empty field still has to occupy space and show its edge. */
+.control-input-wrapper .control-value:empty::before {
+	content: "\00a0";
+}
+
+/* The live input and the resting value must be the same size, or the field jumps
+   as you tab through the form. */
+.form-control,
+.input-with-feedback,
+.control-input input,
+.control-input select,
+.control-input textarea {
+	background: var(--fuse-surface);
+	border: 1px solid var(--fuse-border-strong);
+	min-height: 32px;
+	width: 100%;
+}
+
+/* Help text under a field is guidance, not decoration — it was too faint to read. */
+.help-box,
+.form-group .help-box,
+.section-description {
+	color: var(--fuse-muted);
+	font-size: 11.5px;
+}
+
+/* Genuinely read-only fields must look different from merely unfocused ones,
+   otherwise "cannot edit" and "not editing yet" look identical. */
+.frappe-control[data-fieldtype] .control-input input[readonly],
+.frappe-control.disabled .like-disabled-input {
+	background: var(--fuse-green-tint);
+	border-style: dashed;
+	color: var(--fuse-muted);
+	cursor: not-allowed;
 }
 
 .form-section,
