@@ -1,0 +1,227 @@
+/* ==============================================================================
+   fuse_home.css — the Fuse landing page
+
+   Loaded by fuse_home.js via a <link>, not bundled, so the page JS stays small.
+   Every colour derives from the tokens in fuse_theme.bundle.css, so the page
+   follows the theme rather than carrying a second palette.
+   ============================================================================== */
+
+.fuse-home {
+	--fh-primary: var(--fuse-green, #007E45);
+	--fh-primary-dark: var(--fuse-green-dark, #006034);
+	--fh-accent: var(--fuse-green-bright, #1FA060);
+	--fh-tint: var(--fuse-green-tint, #E7F4ED);
+	--fh-card: var(--fuse-surface, #FFFFFF);
+	--fh-border: var(--fuse-border, #DCE5E0);
+	--fh-text: var(--fuse-ink, #16241C);
+	--fh-muted: var(--fuse-muted, #66756D);
+	--fh-radius: var(--fuse-r-lg, 12px);
+	--fh-shadow: var(--fuse-e1, 0 1px 2px rgba(22, 36, 28, .06));
+	--fh-t: var(--fuse-t, 180ms cubic-bezier(.2, .6, .3, 1));
+
+	color: var(--fh-text);
+	padding-bottom: 40px;
+}
+
+/* ── Banner ─────────────────────────────────────────────────────────────── */
+
+.fuse-home__banner {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	padding: 20px 24px;
+	border-radius: var(--fh-radius);
+	background: linear-gradient(100deg, var(--fh-primary-dark) 0%, var(--fh-primary) 55%, var(--fh-accent) 100%);
+	color: #FFFFFF;
+	margin-bottom: 28px;
+	flex-wrap: wrap;
+}
+
+.fuse-home__mark {
+	width: 44px;
+	height: 44px;
+	flex: 0 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, .18);
+	border: 1px solid rgba(255, 255, 255, .28);
+	font-size: 20px;
+	font-weight: 650;
+}
+
+.fuse-home__titles {
+	min-width: 0;
+	flex: 1 1 auto;
+}
+
+.fuse-home__title {
+	font-size: 22px;
+	font-weight: 650;
+	letter-spacing: -.01em;
+	line-height: 1.2;
+}
+
+.fuse-home__subtitle {
+	font-size: 13px;
+	opacity: .92;
+	margin-top: 2px;
+}
+
+.fuse-home__clock {
+	text-align: right;
+	flex: 0 0 auto;
+	line-height: 1.2;
+}
+
+.fuse-home__time {
+	font-size: 20px;
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+}
+
+.fuse-home__date {
+	font-size: 12px;
+	opacity: .9;
+}
+
+/* ── Section heading ────────────────────────────────────────────────────── */
+
+.fuse-home__heading {
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: .08em;
+	text-transform: uppercase;
+	color: var(--fh-muted);
+	margin-bottom: 12px;
+}
+
+/* ── Tiles ──────────────────────────────────────────────────────────────── */
+
+.fuse-home__tiles {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+	gap: 16px;
+}
+
+.fuse-tile {
+	display: flex;
+	align-items: flex-start;
+	gap: 14px;
+	padding: 18px;
+	background: var(--fh-card);
+	border: 1px solid var(--fh-border);
+	border-top: 3px solid var(--fh-primary);
+	border-radius: var(--fh-radius);
+	box-shadow: var(--fh-shadow);
+	cursor: pointer;
+	text-align: left;
+	width: 100%;
+	transition: box-shadow var(--fh-t), transform var(--fh-t), border-color var(--fh-t);
+}
+
+.fuse-tile:hover,
+.fuse-tile:focus-visible {
+	box-shadow: var(--fuse-e2, 0 2px 6px rgba(22, 36, 28, .07));
+	transform: translateY(-1px);
+	outline: none;
+}
+
+.fuse-tile:focus-visible {
+	border-color: var(--fh-accent);
+	box-shadow: 0 0 0 3px var(--fh-tint);
+}
+
+.fuse-tile__icon {
+	flex: 0 0 auto;
+	width: 40px;
+	height: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: var(--fuse-r, 8px);
+	background: var(--fh-tint);
+	color: var(--fh-primary-dark);
+	font-size: 18px;
+}
+
+.fuse-tile__body {
+	min-width: 0;
+}
+
+.fuse-tile__label {
+	font-size: 15px;
+	font-weight: 600;
+	color: var(--fh-text);
+	line-height: 1.3;
+}
+
+.fuse-tile__blurb {
+	font-size: 12.5px;
+	color: var(--fh-muted);
+	margin-top: 3px;
+	line-height: 1.4;
+}
+
+.fuse-tile__chevron {
+	margin-left: auto;
+	align-self: center;
+	color: var(--fh-muted);
+	flex: 0 0 auto;
+}
+
+/* ── States ─────────────────────────────────────────────────────────────── */
+
+.fuse-home__empty,
+.fuse-home__error {
+	padding: 28px;
+	border: 1px dashed var(--fh-border);
+	border-radius: var(--fh-radius);
+	color: var(--fh-muted);
+	text-align: center;
+}
+
+.fuse-home__error {
+	border-style: solid;
+	border-color: var(--fuse-danger, #C62828);
+	background: var(--fuse-danger-bg, #FDECEC);
+	color: var(--fuse-danger, #C62828);
+	text-align: left;
+}
+
+.fuse-home__skeleton {
+	height: 96px;
+	border-radius: var(--fh-radius);
+	background: linear-gradient(90deg, var(--fh-card) 0%, var(--fh-tint) 50%, var(--fh-card) 100%);
+	background-size: 200% 100%;
+	animation: fuse-shimmer 1.2s ease-in-out infinite;
+	border: 1px solid var(--fh-border);
+}
+
+@keyframes fuse-shimmer {
+	0% { background-position: 200% 0; }
+	100% { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.fuse-home__skeleton { animation: none; }
+	.fuse-tile { transition: none; }
+}
+
+/* ── Mobile — the floor uses this one-handed ────────────────────────────── */
+
+@media (max-width: 767px) {
+	.fuse-home__tiles {
+		grid-template-columns: 1fr;
+	}
+
+	.fuse-tile {
+		min-height: 64px;
+		padding: 16px;
+	}
+
+	.fuse-home__clock {
+		text-align: left;
+	}
+}
