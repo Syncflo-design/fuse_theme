@@ -13,7 +13,7 @@
 //   4. CSS lives in its own file, linked from here, so this stays small.
 // ============================================================================
 
-const BUILD_MARKER = 'v0.1.0-2026-08-06-fuse-home';
+const BUILD_MARKER = 'v0.2.0-2026-08-11-tile-routes';
 
 frappe.pages['fuse-home'].on_page_load = function (wrapper) {
 	const page = frappe.ui.make_app_page({
@@ -143,7 +143,15 @@ class FuseHome {
 			$tile.find('.fuse-tile__icon').text(tile.icon || '');
 			$tile.find('.fuse-tile__label').text(tile.label || '');
 			$tile.find('.fuse-tile__blurb').text(tile.blurb || '');
-			$tile.on('click', () => frappe.set_route.apply(null, tile.route));
+			// route_options is Frappe's own mechanism and covers both cases: filters on a
+			// List route, field defaults on a new document. Set immediately before the
+			// route so nothing else can consume it first — Frappe clears it on use.
+			$tile.on('click', () => {
+				if (tile.options) {
+					frappe.route_options = Object.assign({}, tile.options);
+				}
+				frappe.set_route.apply(null, tile.route);
+			});
 
 			$tiles.append($tile);
 		});
