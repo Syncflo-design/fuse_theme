@@ -83,7 +83,7 @@ TILES = [
 		"label": "Stock Control",
 		"blurb": "Transfers, adjustments, counts and reports",
 		"icon": "📦",
-		"route": ["query-report", "Stock Balance"],
+		"route": ["Workspaces", "Fuse Stock Control"],
 		"roles": ["Stock Controller", "Stock User", "Stock Manager"],
 	},
 ]
@@ -117,3 +117,17 @@ def get_home():
 		"user": frappe.db.get_value("User", frappe.session.user, "full_name") or frappe.session.user,
 		"company": frappe.defaults.get_user_default("Company") or "",
 	}
+
+
+@frappe.whitelist()
+def setup():
+	"""Re-apply the theme's own site configuration — currently the Stock Control workspace.
+
+	Exists because after_migrate does not reliably fire on a Frappe Cloud deploy, and
+	without this repairing that needs bench access.
+	"""
+	frappe.only_for("System Manager")
+
+	from fuse_theme.install import after_install
+
+	return after_install()
