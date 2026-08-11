@@ -9,6 +9,8 @@ import json
 
 import frappe
 
+HOME_PAGE = "fuse-home"
+LANDING = "Fuse"
 WORKSPACE = "Fuse Stock Control"
 
 # Stock Entry purposes, as the Stock Entry list filters on them. Only these post to
@@ -69,31 +71,50 @@ CONTENT = [
 ]
 
 
-def _build_workspace():
-	"""Create or refresh the Stock Control workspace.
+# The landing workspace. Its only job is to be the way in from the desk: one shortcut to
+# the Fuse Home page, which is where the real tiles live.
+#
+# It used to be maintained by hand and drifted — it still carried an Item Adjustment
+# shortcut pointing at Stock Reconciliation, a doctype that does NOT post to Intacct, long
+# after that route was removed from the home page. Defined here so it cannot drift again.
+LANDING_SHORTCUTS = [
+	{"label": "Fuse Home", "type": "Page", "link_to": HOME_PAGE, "color": "Green"},
+]
+
+LANDING_CONTENT = [
+	{"id": "fuse_land_head", "type": "header",
+	 "data": {"text": '<span class="h4"><b>Fuse Manufacturing</b></span>', "col": 12}},
+	{"id": "fuse_land_s1", "type": "shortcut", "data": {"shortcut_name": "Fuse Home", "col": 4}},
+]
+
+
+def _build(name, title, icon, content, shortcuts, links, sequence_id=None):
+	"""Create or refresh one workspace.
 
 	Rebuilt from this definition every time rather than merged: the file is the source of
 	truth, so a hand-edit on one site cannot quietly persist and make two clients differ.
 	"""
-	if frappe.db.exists("Workspace", WORKSPACE):
-		doc = frappe.get_doc("Workspace", WORKSPACE)
+	if frappe.db.exists("Workspace", name):
+		doc = frappe.get_doc("Workspace", name)
 		doc.shortcuts = []
 		doc.links = []
 	else:
 		doc = frappe.new_doc("Workspace")
-		doc.name = WORKSPACE
+		doc.name = name
 
-	doc.label = WORKSPACE
-	doc.title = "Stock Control"
+	doc.label = name
+	doc.title = title
 	doc.module = "Fuse Theme"
-	doc.icon = "stock"
+	doc.icon = icon
 	doc.public = 1
 	doc.is_hidden = 0
-	doc.content = json.dumps(CONTENT)
+	doc.content = json.dumps(content)
+	if sequence_id is not None:
+		doc.sequence_id = sequence_id
 
-	for shortcut in SHORTCUTS:
+	for shortcut in shortcuts:
 		doc.append("shortcuts", dict(shortcut))
-	for link in LINKS:
+	for link in links:
 		doc.append("links", dict(link))
 
 	doc.flags.ignore_permissions = True
@@ -104,10 +125,18 @@ def _build_workspace():
 
 def after_install():
 	"""Put the site's theme-owned configuration in step with this version of the app."""
-	name = _build_workspace()
+	landing = _build(
+		LANDING, "Fuse", "organization", LANDING_CONTENT, LANDING_SHORTCUTS, [],
+		# First in the desk, ahead of ERPNext's own workspaces.
+		sequence_id=0,
+	)
+	stock = _build(WORKSPACE, "Stock Control", "stock", CONTENT, SHORTCUTS, LINKS, sequence_id=1)
+
 	frappe.db.commit()
 	return {
-		"workspace": name,
+		"landing": landing,
+		"workspace": stock,
+		"home_page": HOME_PAGE,
 		"shortcuts": len(SHORTCUTS),
 		"links": len([link for link in LINKS if link["type"] == "Link"]),
 	}
