@@ -123,6 +123,28 @@ def _build(name, title, icon, content, shortcuts, links, sequence_id=None):
 	return doc.name
 
 
+def _set_default_workspace():
+	"""Land system users on Fuse rather than wherever the desk would otherwise open.
+
+	Only fills the field where it is EMPTY. Someone who has deliberately chosen a different
+	landing workspace keeps it — a setup routine that runs on every migrate must not
+	silently undo a user's own preference every time it runs.
+
+	`default_workspace` takes a Workspace, not a Page, so this lands on Fuse and its single
+	Fuse Home shortcut. Landing straight on the page is not something the field supports.
+	"""
+	users = frappe.get_all(
+		"User",
+		filters={"enabled": 1, "user_type": "System User", "default_workspace": ("in", ("", None))},
+		pluck="name",
+	)
+	for user in users:
+		# update_modified=False: this is configuration, not the user editing their profile,
+		# and bumping every user's modified stamp on every migrate is noise.
+		frappe.db.set_value("User", user, "default_workspace", LANDING, update_modified=False)
+	return len(users)
+
+
 def after_install():
 	"""Put the site's theme-owned configuration in step with this version of the app."""
 	landing = _build(
@@ -131,6 +153,7 @@ def after_install():
 		sequence_id=0,
 	)
 	stock = _build(WORKSPACE, "Stock Control", "stock", CONTENT, SHORTCUTS, LINKS, sequence_id=1)
+	landed = _set_default_workspace()
 
 	frappe.db.commit()
 	return {
@@ -139,4 +162,5 @@ def after_install():
 		"home_page": HOME_PAGE,
 		"shortcuts": len(SHORTCUTS),
 		"links": len([link for link in LINKS if link["type"] == "Link"]),
+		"users_landed_on_fuse": landed,
 	}
