@@ -820,3 +820,48 @@ header.navbar {
 		background: #FFFFFF;
 	}
 }
+
+
+/* ==============================================================================
+   12. FUSE HOME BUTTON — the way back, from anywhere
+   ==============================================================================
+   The desk's own home button lands on the workspace grid, which does not carry
+   Fuse. This is the theme's own button, injected into the navbar, so it behaves
+   the same on every site regardless of what the desk considers home.
+   ============================================================================== */
+
+.fuse-home-nav-item {
+	display: flex;
+	align-items: center;
+}
+
+.fuse-home-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	margin-right: 12px;
+	border-radius: 8px;
+	/* White on the green navbar, so it reads as part of the bar rather than a
+	   control dropped onto it. */
+	background: rgba(255, 255, 255, 0.16);
+	color: #FFFFFF;
+	font-weight: 700;
+	font-size: 14px;
+	line-height: 1;
+	text-decoration: none;
+	transition: background 120ms ease;
+}
+
+.fuse-home-button:hover,
+.fuse-home-button:focus {
+	background: rgba(255, 255, 255, 0.30);
+	color: #FFFFFF;
+	text-decoration: none;
+}
+
+.fuse-home-button:focus-visible {
+	outline: 2px solid #FFFFFF;
+	outline-offset: 2px;
+}
