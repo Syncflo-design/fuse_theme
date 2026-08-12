@@ -19,7 +19,6 @@ import frappe
 # Stock Entry types that post. Kept as literals rather than imported from the integration
 # app: the theme must install and run without it, and a missing tile is a better failure
 # than a home page that will not load.
-MANUFACTURE = "Manufacture"
 TRANSFER = "Material Transfer"
 WIP_ISSUE = "Material Transfer for Manufacture"
 ADJUSTMENT_PURPOSES = ["Material Receipt", "Material Issue"]
@@ -31,19 +30,6 @@ TILES = [
 		"blurb": "Current manufacturing and production orders",
 		"icon": "🔧",
 		"route": ["List", "Work Order"],
-		"roles": ["Stock Controller", "Manufacturing User", "Manufacturing Manager"],
-	},
-	{
-		# Lands on the works orders in progress rather than a blank Manufacture entry.
-		# Raised from the order, ERPNext fills the components, quantities, warehouses and
-		# BOM; raised blank, someone retypes the whole recipe and any mistake posts
-		# straight to Intacct.
-		"key": "wip_conversion",
-		"label": "WIP Conversion",
-		"blurb": "Convert raw materials and record output",
-		"icon": "📊",
-		"route": ["List", "Work Order"],
-		"options": {"status": "In Process"},
 		"roles": ["Stock Controller", "Manufacturing User", "Manufacturing Manager"],
 	},
 	{
