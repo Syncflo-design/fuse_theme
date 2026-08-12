@@ -21,7 +21,6 @@ import frappe
 # than a home page that will not load.
 TRANSFER = "Material Transfer"
 WIP_ISSUE = "Material Transfer for Manufacture"
-ADJUSTMENT_PURPOSES = ["Material Receipt", "Material Issue"]
 
 TILES = [
 	{
@@ -55,42 +54,9 @@ TILES = [
 		"roles": ["Stock Controller", "Stock User", "Stock Manager"],
 	},
 	{
-		# Deliberately NOT Stock Reconciliation. That is the doctype the opening stock sync
-		# uses and it does not post to Intacct — adjusting through it would move stock in
-		# ERPNext and leave Intacct none the wiser. Adjustments are Material Receipt (up)
-		# and Material Issue (down), so this opens the list and the user picks a direction
-		# deliberately rather than having one chosen for them.
-		"key": "item_adjustment",
-		"label": "Item Adjustment",
-		"blurb": "Adjust on-hand quantities in a warehouse",
-		"icon": "⚖",
-		# Asks which way before opening anything. An adjustment that goes the wrong way is
-		# not a typo you notice later — it posts to Intacct on submit — so the direction is
-		# chosen deliberately rather than defaulted and corrected.
-		"choices": [
-			{
-				"label": "Add Stock",
-				"blurb": "Bring quantity into a warehouse",
-				"route": ["new", "Stock Entry"],
-				"options": {"stock_entry_type": "Material Receipt"},
-			},
-			{
-				"label": "Remove Stock",
-				"blurb": "Take quantity out of a warehouse",
-				"route": ["new", "Stock Entry"],
-				"options": {"stock_entry_type": "Material Issue"},
-			},
-		],
-		# Where the tile goes if the choices cannot be shown, and what the permission check
-		# below tests.
-		"route": ["List", "Stock Entry"],
-		"options": {"purpose": ["in", ADJUSTMENT_PURPOSES]},
-		"roles": ["Stock Controller", "Stock Manager"],
-	},
-	{
 		"key": "stock_control",
 		"label": "Stock Control",
-		"blurb": "Transfers, adjustments, counts and reports",
+		"blurb": "Transfers, production and stock reports",
 		"icon": "📦",
 		"route": ["Workspaces", "Fuse Stock Control"],
 		"roles": ["Stock Controller", "Stock User", "Stock Manager"],

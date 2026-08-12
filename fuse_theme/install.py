@@ -16,7 +16,6 @@ WORKSPACE = "Fuse Stock Control"
 # Stock Entry purposes, as the Stock Entry list filters on them. Only these post to
 # Intacct — a shortcut to an unfiltered list would invite picking one that does not.
 TRANSFER_PURPOSES = ["Material Transfer", "Material Transfer for Manufacture"]
-ADJUSTMENT_PURPOSES = ["Material Receipt", "Material Issue"]
 
 SHORTCUTS = [
 	{
@@ -25,13 +24,6 @@ SHORTCUTS = [
 		"link_to": "Stock Entry",
 		"stats_filter": json.dumps({"purpose": ["in", TRANSFER_PURPOSES]}),
 		"color": "Blue",
-	},
-	{
-		"label": "Adjustments",
-		"type": "DocType",
-		"link_to": "Stock Entry",
-		"stats_filter": json.dumps({"purpose": ["in", ADJUSTMENT_PURPOSES]}),
-		"color": "Orange",
 	},
 	{
 		"label": "Production",
@@ -66,7 +58,6 @@ CONTENT = [
 	{"id": "fuse_sc_head", "type": "header",
 	 "data": {"text": '<span class="h4"><b>Stock Control</b></span>', "col": 12}},
 	{"id": "fuse_sc_s1", "type": "shortcut", "data": {"shortcut_name": "Transfers", "col": 4}},
-	{"id": "fuse_sc_s2", "type": "shortcut", "data": {"shortcut_name": "Adjustments", "col": 4}},
 	{"id": "fuse_sc_s3", "type": "shortcut", "data": {"shortcut_name": "Production", "col": 4}},
 	{"id": "fuse_sc_c1", "type": "card", "data": {"card_name": "Movements", "col": 4}},
 	{"id": "fuse_sc_c2", "type": "card", "data": {"card_name": "Reports", "col": 4}},
