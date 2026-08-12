@@ -13,7 +13,7 @@
 //   4. CSS lives in its own file, linked from here, so this stays small.
 // ============================================================================
 
-const BUILD_MARKER = 'v0.2.0-2026-08-11-tile-routes';
+const BUILD_MARKER = 'v0.2.1-2026-08-11-new-doc';
 
 frappe.pages['fuse-home'].on_page_load = function (wrapper) {
 	const page = frappe.ui.make_app_page({
@@ -150,6 +150,16 @@ class FuseHome {
 				if (tile.options) {
 					frappe.route_options = Object.assign({}, tile.options);
 				}
+
+				// A new document is NOT a route. set_route('new', 'Stock Entry') builds
+				// /desk/new/Stock%20Entry, which v16 answers with "Page new not found" —
+				// frappe.new_doc() is the only way in, and it still honours route_options
+				// for the field defaults.
+				if (tile.route[0] === 'new') {
+					frappe.new_doc(tile.route[1]);
+					return;
+				}
+
 				frappe.set_route.apply(null, tile.route);
 			});
 

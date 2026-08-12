@@ -34,12 +34,16 @@ TILES = [
 		"roles": ["Stock Controller", "Manufacturing User", "Manufacturing Manager"],
 	},
 	{
+		# Lands on the works orders in progress rather than a blank Manufacture entry.
+		# Raised from the order, ERPNext fills the components, quantities, warehouses and
+		# BOM; raised blank, someone retypes the whole recipe and any mistake posts
+		# straight to Intacct.
 		"key": "wip_conversion",
 		"label": "WIP Conversion",
 		"blurb": "Convert raw materials and record output",
 		"icon": "📊",
-		"route": ["new", "Stock Entry"],
-		"options": {"stock_entry_type": MANUFACTURE},
+		"route": ["List", "Work Order"],
+		"options": {"status": "In Process"},
 		"roles": ["Stock Controller", "Manufacturing User", "Manufacturing Manager"],
 	},
 	{
