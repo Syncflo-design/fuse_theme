@@ -46,6 +46,11 @@ LINKS = [
 	 "is_query_report": 1},
 	{"type": "Link", "label": "Stock Projected Qty", "link_type": "Report",
 	 "link_to": "Stock Projected Qty", "is_query_report": 1},
+	# Line level "what is still coming": ordered against received, with the due date. The
+	# orders behind it are mirrored from Intacct and never received here, so pending
+	# quantity is Intacct's outstanding figure rather than anything ERPNext worked out.
+	{"type": "Link", "label": "Purchase Order Analysis", "link_type": "Report",
+	 "link_to": "Purchase Order Analysis", "is_query_report": 1},
 	{"type": "Card Break", "label": "Master Data"},
 	{"type": "Link", "label": "Item", "link_type": "DocType", "link_to": "Item"},
 	{"type": "Link", "label": "Warehouse", "link_type": "DocType", "link_to": "Warehouse"},
