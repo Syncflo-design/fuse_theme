@@ -59,6 +59,9 @@ LINKS = [
 	{"type": "Link", "label": "Warehouse", "link_type": "DocType", "link_to": "Warehouse"},
 ]
 
+# Every `shortcut_name` must match a SHORTCUTS label and every `card_name` a Card Break
+# label in LINKS, exactly — a block naming something that does not exist renders as an
+# empty box.
 CONTENT = [
 	{"id": "fuse_sc_head", "type": "header",
 	 "data": {"text": '<span class="h4"><b>Stock Control</b></span>', "col": 12}},
@@ -98,6 +101,14 @@ def _build(name, title, icon, content, shortcuts, links, sequence_id=None):
 		doc = frappe.get_doc("Workspace", name)
 		doc.shortcuts = []
 		doc.links = []
+		# Roles too. A leftover role restriction on the hand-made Fuse workspace survived
+		# every rebuild because this line was missing, and a workspace the user cannot see
+		# is not hidden gracefully — frappe.views.Workspace.show_page gets undefined and
+		# throws, taking the sidebar down with it.
+		#
+		# Fuse workspaces are unrestricted on purpose. What a user may DO is decided by
+		# document permissions; hiding the page as well only produces a broken-looking desk.
+		doc.roles = []
 	else:
 		doc = frappe.new_doc("Workspace")
 		doc.name = name
