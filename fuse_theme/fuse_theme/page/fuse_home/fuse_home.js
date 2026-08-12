@@ -13,7 +13,7 @@
 //   4. CSS lives in its own file, linked from here, so this stays small.
 // ============================================================================
 
-const BUILD_MARKER = 'v0.2.1-2026-08-11-new-doc';
+const BUILD_MARKER = 'v0.3.0-2026-08-11-adjustment-choice';
 
 frappe.pages['fuse-home'].on_page_load = function (wrapper) {
 	const page = frappe.ui.make_app_page({
@@ -112,6 +112,56 @@ class FuseHome {
 		this.$root.find('[data-fuse="subtitle"]').text(text);
 	}
 
+	// Open whatever a tile or a choice points at.
+	//
+	// route_options is Frappe's own mechanism and covers both cases: filters on a List
+	// route, field defaults on a new document. Set immediately before navigating so
+	// nothing else can consume it first — Frappe clears it on use.
+	go(target) {
+		if (target.options) {
+			frappe.route_options = Object.assign({}, target.options);
+		}
+
+		// A new document is NOT a route. set_route('new', 'Stock Entry') builds
+		// /desk/new/Stock%20Entry, which v16 answers with "Page new not found" —
+		// frappe.new_doc() is the only way in, and it still honours route_options.
+		if (target.route[0] === 'new') {
+			frappe.new_doc(target.route[1]);
+			return;
+		}
+
+		frappe.set_route.apply(null, target.route);
+	}
+
+	// Ask which way before opening anything.
+	//
+	// Used by Item Adjustment, where the direction is the whole decision: an adjustment
+	// posts to Intacct on submit, so picking the wrong one is not something you quietly
+	// correct afterwards.
+	ask(tile) {
+		const dialog = new frappe.ui.Dialog({ title: tile.label });
+		const $body = $(dialog.body).empty().addClass('fuse-choices');
+
+		tile.choices.forEach((choice) => {
+			const $button = $(
+				'<button type="button" class="fuse-choice">' +
+					'  <span class="fuse-choice__label"></span>' +
+					'  <span class="fuse-choice__blurb"></span>' +
+					'</button>'
+			);
+			// .text() again — a choice label is data from the server, not markup.
+			$button.find('.fuse-choice__label').text(choice.label || '');
+			$button.find('.fuse-choice__blurb').text(choice.blurb || '');
+			$button.on('click', () => {
+				dialog.hide();
+				this.go(choice);
+			});
+			$body.append($button);
+		});
+
+		dialog.show();
+	}
+
 	render_tiles(tiles) {
 		const $tiles = this.$root.find('[data-fuse="tiles"]');
 
@@ -143,24 +193,12 @@ class FuseHome {
 			$tile.find('.fuse-tile__icon').text(tile.icon || '');
 			$tile.find('.fuse-tile__label').text(tile.label || '');
 			$tile.find('.fuse-tile__blurb').text(tile.blurb || '');
-			// route_options is Frappe's own mechanism and covers both cases: filters on a
-			// List route, field defaults on a new document. Set immediately before the
-			// route so nothing else can consume it first — Frappe clears it on use.
 			$tile.on('click', () => {
-				if (tile.options) {
-					frappe.route_options = Object.assign({}, tile.options);
-				}
-
-				// A new document is NOT a route. set_route('new', 'Stock Entry') builds
-				// /desk/new/Stock%20Entry, which v16 answers with "Page new not found" —
-				// frappe.new_doc() is the only way in, and it still honours route_options
-				// for the field defaults.
-				if (tile.route[0] === 'new') {
-					frappe.new_doc(tile.route[1]);
+				if (tile.choices && tile.choices.length) {
+					this.ask(tile);
 					return;
 				}
-
-				frappe.set_route.apply(null, tile.route);
+				this.go(tile);
 			});
 
 			$tiles.append($tile);

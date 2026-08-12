@@ -225,3 +225,57 @@
 		text-align: left;
 	}
 }
+
+
+/* ==============================================================================
+   CHOICE DIALOG — which way is this adjustment going?
+   ==============================================================================
+   Two large targets rather than a dropdown. The direction is the whole
+   decision, and an adjustment posts to Intacct on submit, so it is worth a
+   deliberate click rather than a default someone accepts without reading.
+   ============================================================================== */
+
+.fuse-choices {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	padding: 4px 0;
+}
+
+.fuse-choice {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 2px;
+	width: 100%;
+	padding: 14px 16px;
+	border: 1px solid var(--fuse-line, #DCE5E0);
+	border-left: 3px solid var(--fuse-green, #007E45);
+	border-radius: 8px;
+	background: #FFFFFF;
+	text-align: left;
+	cursor: pointer;
+	transition: background 120ms ease, border-color 120ms ease;
+}
+
+.fuse-choice:hover,
+.fuse-choice:focus-visible {
+	background: var(--fuse-green-tint, #E7F4ED);
+	border-color: var(--fuse-green, #007E45);
+}
+
+.fuse-choice:focus-visible {
+	outline: 2px solid var(--fuse-green, #007E45);
+	outline-offset: 2px;
+}
+
+.fuse-choice__label {
+	font-weight: 600;
+	font-size: 14px;
+	color: var(--fuse-ink, #16241C);
+}
+
+.fuse-choice__blurb {
+	font-size: 12px;
+	color: var(--fuse-muted, #66756D);
+}

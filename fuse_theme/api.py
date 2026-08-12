@@ -78,6 +78,25 @@ TILES = [
 		"label": "Item Adjustment",
 		"blurb": "Adjust on-hand quantities in a warehouse",
 		"icon": "⚖",
+		# Asks which way before opening anything. An adjustment that goes the wrong way is
+		# not a typo you notice later — it posts to Intacct on submit — so the direction is
+		# chosen deliberately rather than defaulted and corrected.
+		"choices": [
+			{
+				"label": "Add Stock",
+				"blurb": "Bring quantity into a warehouse",
+				"route": ["new", "Stock Entry"],
+				"options": {"stock_entry_type": "Material Receipt"},
+			},
+			{
+				"label": "Remove Stock",
+				"blurb": "Take quantity out of a warehouse",
+				"route": ["new", "Stock Entry"],
+				"options": {"stock_entry_type": "Material Issue"},
+			},
+		],
+		# Where the tile goes if the choices cannot be shown, and what the permission check
+		# below tests.
 		"route": ["List", "Stock Entry"],
 		"options": {"purpose": ["in", ADJUSTMENT_PURPOSES]},
 		"roles": ["Stock Controller", "Stock Manager"],
