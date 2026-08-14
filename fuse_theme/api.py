@@ -58,7 +58,12 @@ TILES = [
 		"label": "Stock Control",
 		"blurb": "Transfers, production and stock reports",
 		"icon": "📦",
-		"route": ["Workspaces", "Fuse Stock Control"],
+		# The workspace SLUG, not ["Workspaces", "Fuse Stock Control"]. That older form
+		# builds /desk/Workspaces/Fuse%20Stock%20Control, which renders as empty skeletons
+		# and throws in frappe.views.Workspace.show_page — the fault that looked like a
+		# permissions problem for days. The desk's own sidebar uses the slug, and the slug
+		# works.
+		"route": ["fuse-stock-control"],
 		"roles": ["Stock Controller", "Stock User", "Stock Manager"],
 	},
 ]
