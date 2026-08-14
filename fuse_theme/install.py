@@ -46,11 +46,12 @@ LINKS = [
 	 "is_query_report": 1},
 	{"type": "Link", "label": "Stock Projected Qty", "link_type": "Report",
 	 "link_to": "Stock Projected Qty", "is_query_report": 1},
-	# Line level "what is still coming": ordered against received, with the due date. The
-	# orders behind it are mirrored from Intacct and never received here, so pending
-	# quantity is Intacct's outstanding figure rather than anything ERPNext worked out.
-	{"type": "Link", "label": "Purchase Order Analysis", "link_type": "Report",
-	 "link_to": "Purchase Order Analysis", "is_query_report": 1},
+	# Ours, not ERPNext's Purchase Order Analysis. That report is built for a business that
+	# receipts and bills in ERPNext; here it does neither, so its Received Qty, Billed
+	# Amount and Amount to Bill columns are permanently zero and its chart plots one of
+	# them. This shows what is still coming, where it is going and when it was due.
+	{"type": "Link", "label": "Stock on Order", "link_type": "Report",
+	 "link_to": "Stock on Order", "is_query_report": 1},
 	{"type": "Card Break", "label": "Master Data"},
 	{"type": "Link", "label": "Item", "link_type": "DocType", "link_to": "Item"},
 	{"type": "Link", "label": "Warehouse", "link_type": "DocType", "link_to": "Warehouse"},
