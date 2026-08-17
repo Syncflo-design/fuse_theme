@@ -15,7 +15,12 @@
 	   would distort it. object-fit is belt and braces in case a Frappe rule sets a
 	   height we have not seen. */
 	height: auto !important;
-	object-fit: contain;
+	/* THE one that matters. Frappe caps .app-logo at max-height 32px, so height:auto
+	   was being clamped back to 32 while the width stayed at 128 — which is exactly
+	   what squashing looks like. Everything here needs !important; the width applied
+	   and the plain declarations next to it did not. */
+	max-height: none !important;
+	object-fit: contain !important;
 	max-width: 100%;
 	margin-bottom: 8px;
 }
