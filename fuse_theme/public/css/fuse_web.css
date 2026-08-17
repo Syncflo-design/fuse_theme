@@ -1,0 +1,26 @@
+/* ==============================================================================
+   Fuse — website pages (login, password reset)
+   ==============================================================================
+   Loaded through web_include_css, NOT the desk bundle. app_include_css only
+   reaches the desk, so nothing in fuse_theme.bundle.css touches the sign-in
+   screen — that is why the login page kept Frappe's own styling.
+   ============================================================================== */
+
+/* Frappe sizes .app-logo at 32px, which is right for a square glyph and far too
+   small for a logo with a wordmark under it. Four times that, and auto height so
+   the artwork keeps its proportions. */
+.app-logo {
+	width: 128px !important;
+	height: auto !important;
+	max-width: 100%;
+	margin-bottom: 8px;
+}
+
+/* The sign-in card is centred on the logo's old width; give it room so the
+   larger mark does not sit against the edge. */
+.page-card-head .app-logo,
+.for-login .app-logo {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}

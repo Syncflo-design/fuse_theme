@@ -8,6 +8,10 @@ app_license     = "MIT"
 app_include_css = "fuse_theme.bundle.css"
 app_include_js = "fuse_theme.bundle.js"
 
+# app_include_css reaches the DESK only. The login and password screens are website
+# pages, so they need their own include or nothing we write touches them.
+web_include_css = "/assets/fuse_theme/css/fuse_web.css"
+
 # Both, because after_migrate has been seen not to fire on a Frappe Cloud deploy — the code
 # ships and the configuration that goes with it does not. Also callable as
 # fuse_theme.api.setup for the same reason.
