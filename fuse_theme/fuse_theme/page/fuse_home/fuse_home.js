@@ -56,7 +56,7 @@ class FuseHome {
 	render_shell() {
 		const html = [
 			'<div class="fuse-home__banner">',
-			'  <div class="fuse-home__mark">F</div>',
+			'  <img class="fuse-home__mark" src="/assets/fuse_theme/images/fuse-icon.png" alt="Fuse">',
 			'  <div class="fuse-home__titles">',
 			'    <div class="fuse-home__title">Fuse Manufacturing</div>',
 			'    <div class="fuse-home__subtitle" data-fuse="subtitle">Loading...</div>',

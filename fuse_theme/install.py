@@ -105,6 +105,24 @@ LANDING_CONTENT = [
 # the workspace was solving a problem that did not exist.
 
 
+LOGO = "/assets/fuse_theme/images/fuse-logo.png"
+ICON = "/assets/fuse_theme/images/fuse-icon.png"
+
+
+def _branding():
+	"""Put Fuse's own logo on the login screen, the navbar and the browser tab.
+
+	Set here rather than by hand so a new client site is branded on install. The full
+	lockup is used only where there is room for the wordmark; everywhere it is drawn small
+	and square — navbar, tab, apps screen — it is the sphere on its own.
+	"""
+	frappe.db.set_single_value(
+		"Website Settings",
+		{"app_logo": LOGO, "favicon": ICON, "app_name": "Fuse"},
+	)
+	frappe.db.set_single_value("Navbar Settings", "app_logo", ICON)
+
+
 def _training_folder():
 	"""The folder guides are uploaded into, created if it is not there yet."""
 	if frappe.db.exists("File", {"file_name": TRAINING_FOLDER_NAME, "is_folder": 1, "folder": "Home"}):
@@ -194,6 +212,7 @@ def after_install():
 		sequence_id=0,
 	)
 	stock = _build(WORKSPACE, "Stock Control", "stock", CONTENT, SHORTCUTS, LINKS, sequence_id=1)
+	_branding()
 	folder = _training_folder()
 	landed = _set_default_workspace()
 
@@ -202,6 +221,7 @@ def after_install():
 		"landing": landing,
 		"workspace": stock,
 		"training_page": TRAINING_PAGE,
+		"logo": LOGO,
 		"training_folder": folder,
 		"home_page": HOME_PAGE,
 		"shortcuts": len(SHORTCUTS),

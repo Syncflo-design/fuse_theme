@@ -23,7 +23,9 @@ after_migrate = "fuse_theme.install.after_install"
 add_to_apps_screen = [
 	{
 		"name": "fuse_theme",
-		"logo": "/assets/fuse_theme/images/fuse-logo.svg",
+		# The sphere alone, not the full lockup — the apps screen draws it small and square,
+		# so the wordmark would be unreadable at that size.
+		"logo": "/assets/fuse_theme/images/fuse-icon.png",
 		"title": "Fuse",
 		"route": "/desk/fuse-home",
 	}

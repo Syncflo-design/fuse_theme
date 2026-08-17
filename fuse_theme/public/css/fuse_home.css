@@ -41,14 +41,13 @@
 	width: 44px;
 	height: 44px;
 	flex: 0 0 auto;
-	display: flex;
-	align-items: center;
-	justify-content: center;
+	/* The logo is a sphere on white. On the green banner it needs its own light disc
+	   behind it, or the white edge of the artwork reads as a smudge. */
+	padding: 3px;
 	border-radius: 50%;
-	background: rgba(255, 255, 255, .18);
-	border: 1px solid rgba(255, 255, 255, .28);
-	font-size: 20px;
-	font-weight: 650;
+	background: #FFFFFF;
+	border: 1px solid rgba(255, 255, 255, .55);
+	object-fit: contain;
 }
 
 .fuse-home__titles {
