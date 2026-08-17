@@ -11,7 +11,11 @@
    the artwork keeps its proportions. */
 .app-logo {
 	width: 128px !important;
+	/* auto, never a fixed height — the artwork is 519x522 and any second dimension
+	   would distort it. object-fit is belt and braces in case a Frappe rule sets a
+	   height we have not seen. */
 	height: auto !important;
+	object-fit: contain;
 	max-width: 100%;
 	margin-bottom: 8px;
 }
