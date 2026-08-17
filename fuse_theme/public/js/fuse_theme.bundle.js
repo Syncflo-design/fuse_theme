@@ -55,7 +55,10 @@ function insert_button() {
 
 // The desk root — whatever the user types, and where the home button goes. On v16 /app
 // redirects here too, so both are covered.
-const DESK_ROOTS = ['/desk', '/app'];
+// /desk/fuse is the landing workspace, which exists only to hold a shortcut to Fuse Home.
+// Users land there because default_workspace can point at a Workspace but not at a Page,
+// so login sends them one step short of where they are meant to be.
+const DESK_ROOTS = ['/desk', '/app', '/desk/fuse', '/app/fuse'];
 
 function at_desk_root() {
 	const path = window.location.pathname.replace(/\/+$/, '');
