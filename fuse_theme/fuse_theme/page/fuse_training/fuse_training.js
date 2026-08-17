@@ -4,7 +4,7 @@
 // hardcoded here, so replacing a guide is an upload and nothing else: no code change, no
 // deploy, and the list picks it up on the next refresh.
 
-const BUILD_MARKER = 'v0.1.0-2026-08-17-fuse-training';
+const BUILD_MARKER = 'v0.2.0-2026-08-17-logo-and-redirect';
 
 frappe.pages['fuse-training'].on_page_load = function (wrapper) {
 	const page = frappe.ui.make_app_page({

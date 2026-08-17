@@ -13,7 +13,7 @@
 //   4. CSS lives in its own file, linked from here, so this stays small.
 // ============================================================================
 
-const BUILD_MARKER = 'v0.3.0-2026-08-11-adjustment-choice';
+const BUILD_MARKER = 'v0.4.0-2026-08-17-logo-and-redirect';
 
 frappe.pages['fuse-home'].on_page_load = function (wrapper) {
 	const page = frappe.ui.make_app_page({
