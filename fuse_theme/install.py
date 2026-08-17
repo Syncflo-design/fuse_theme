@@ -10,8 +10,15 @@ import json
 import frappe
 
 HOME_PAGE = "fuse-home"
+TRAINING_PAGE = "fuse-training"
 LANDING = "Fuse"
 WORKSPACE = "Fuse Stock Control"
+TRAINING = "Fuse Training"
+
+# Guides are uploaded here and the Training page reads whatever it finds. One folder, so a
+# document can never land somewhere the page does not look.
+TRAINING_FOLDER_NAME = "Fuse Training"
+TRAINING_FOLDER = f"Home/{TRAINING_FOLDER_NAME}"
 
 # Stock Entry purposes, as the Stock Entry list filters on them. Only these post to
 # Intacct — a shortcut to an unfiltered list would invite picking one that does not.
@@ -88,6 +95,33 @@ LANDING_CONTENT = [
 ]
 
 
+TRAINING_SHORTCUTS = [
+	{"label": "Training & Help", "type": "Page", "link_to": TRAINING_PAGE, "color": "Green"},
+]
+
+TRAINING_CONTENT = [
+	{"id": "fuse_tr_head", "type": "header",
+	 "data": {"text": '<span class="h4"><b>Training &amp; Help</b></span>', "col": 12}},
+	{"id": "fuse_tr_s1", "type": "shortcut", "data": {"shortcut_name": "Training & Help", "col": 4}},
+]
+
+
+def _training_folder():
+	"""The folder guides are uploaded into, created if it is not there yet."""
+	if frappe.db.exists("File", {"file_name": TRAINING_FOLDER_NAME, "is_folder": 1, "folder": "Home"}):
+		return TRAINING_FOLDER
+
+	frappe.get_doc(
+		{
+			"doctype": "File",
+			"file_name": TRAINING_FOLDER_NAME,
+			"is_folder": 1,
+			"folder": "Home",
+		}
+	).insert(ignore_permissions=True)
+	return TRAINING_FOLDER
+
+
 def _build(name, title, icon, content, shortcuts, links, sequence_id=None):
 	"""Create or refresh one workspace.
 
@@ -161,12 +195,21 @@ def after_install():
 		sequence_id=0,
 	)
 	stock = _build(WORKSPACE, "Stock Control", "stock", CONTENT, SHORTCUTS, LINKS, sequence_id=1)
+	# In the left menu in its own right, not a tile on Fuse Home — someone reaching for a
+	# guide is usually stuck part-way through a job, not starting a new one.
+	training = _build(
+		TRAINING, "Training & Help", "education", TRAINING_CONTENT, TRAINING_SHORTCUTS, [],
+		sequence_id=2,
+	)
+	folder = _training_folder()
 	landed = _set_default_workspace()
 
 	frappe.db.commit()
 	return {
 		"landing": landing,
 		"workspace": stock,
+		"training": training,
+		"training_folder": folder,
 		"home_page": HOME_PAGE,
 		"shortcuts": len(SHORTCUTS),
 		"links": len([link for link in LINKS if link["type"] == "Link"]),

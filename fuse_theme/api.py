@@ -99,6 +99,65 @@ def get_home():
 	}
 
 
+# Where the guides live. One folder, so the Training page and the upload button can never
+# disagree about what counts as a guide.
+TRAINING_FOLDER = "Home/Fuse Training"
+
+
+@frappe.whitelist()
+def get_training_documents():
+	"""The guides, newest change first.
+
+	Read from the folder rather than a list in code: replacing a guide is then an upload and
+	nothing else — no code change, no deploy. A document nobody can open is worse than no
+	document, so private files are excluded rather than listed and then refused.
+	"""
+	files = frappe.get_all(
+		"File",
+		filters={"folder": TRAINING_FOLDER, "is_folder": 0, "is_private": 0},
+		fields=["name", "file_name", "file_url", "file_size", "modified"],
+		order_by="file_name asc",
+	)
+
+	documents = []
+	for f in files:
+		name = f.file_name or ""
+		documents.append(
+			{
+				# Drop the extension and any leading number used to force the order — the
+				# reader wants "Item Transfer", not "02 Item Transfer.pdf".
+				"title": _readable(name),
+				"url": f.file_url,
+				"is_pdf": name.lower().endswith(".pdf"),
+				"size": _file_size(f.file_size),
+				"updated": frappe.utils.format_date(f.modified, "d MMM yyyy"),
+			}
+		)
+
+	return {
+		"documents": documents,
+		"folder": TRAINING_FOLDER,
+		"can_upload": frappe.has_permission("File", "create"),
+	}
+
+
+def _readable(file_name):
+	name = file_name.rsplit(".", 1)[0]
+	first = name.split(" ", 1)
+	if len(first) == 2 and first[0].isdigit():
+		name = first[1]
+	return name.strip() or file_name
+
+
+def _file_size(size):
+	size = int(size or 0)
+	if size >= 1024 * 1024:
+		return f"{size / (1024 * 1024):.1f} MB"
+	if size >= 1024:
+		return f"{round(size / 1024)} KB"
+	return f"{size} bytes"
+
+
 @frappe.whitelist()
 def setup():
 	"""Re-apply the theme's own site configuration — currently the Stock Control workspace.
