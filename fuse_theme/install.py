@@ -13,7 +13,6 @@ HOME_PAGE = "fuse-home"
 TRAINING_PAGE = "fuse-training"
 LANDING = "Fuse"
 WORKSPACE = "Fuse Stock Control"
-TRAINING = "Fuse Training"
 
 # Guides are uploaded here and the Training page reads whatever it finds. One folder, so a
 # document can never land somewhere the page does not look.
@@ -95,15 +94,15 @@ LANDING_CONTENT = [
 ]
 
 
-TRAINING_SHORTCUTS = [
-	{"label": "Training & Help", "type": "Page", "link_to": TRAINING_PAGE, "color": "Green"},
-]
-
-TRAINING_CONTENT = [
-	{"id": "fuse_tr_head", "type": "header",
-	 "data": {"text": '<span class="h4"><b>Training &amp; Help</b></span>', "col": 12}},
-	{"id": "fuse_tr_s1", "type": "shortcut", "data": {"shortcut_name": "Training & Help", "col": 4}},
-]
+# There is deliberately NO Training workspace.
+#
+# A workspace called "Fuse Training" derives the route fuse-training, which is also the
+# name of the Training page. The workspace then wins every time, so /desk/fuse-training
+# opened the workspace and the page could not be reached at all — and saving the workspace
+# raised frappe.NameError over the clash.
+#
+# The page appears in the left menu under Pages on its own, which is what was wanted, so
+# the workspace was solving a problem that did not exist.
 
 
 def _training_folder():
@@ -195,12 +194,6 @@ def after_install():
 		sequence_id=0,
 	)
 	stock = _build(WORKSPACE, "Stock Control", "stock", CONTENT, SHORTCUTS, LINKS, sequence_id=1)
-	# In the left menu in its own right, not a tile on Fuse Home — someone reaching for a
-	# guide is usually stuck part-way through a job, not starting a new one.
-	training = _build(
-		TRAINING, "Training & Help", "education", TRAINING_CONTENT, TRAINING_SHORTCUTS, [],
-		sequence_id=2,
-	)
 	folder = _training_folder()
 	landed = _set_default_workspace()
 
@@ -208,7 +201,7 @@ def after_install():
 	return {
 		"landing": landing,
 		"workspace": stock,
-		"training": training,
+		"training_page": TRAINING_PAGE,
 		"training_folder": folder,
 		"home_page": HOME_PAGE,
 		"shortcuts": len(SHORTCUTS),
