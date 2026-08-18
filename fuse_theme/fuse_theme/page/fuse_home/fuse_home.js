@@ -71,7 +71,8 @@ class FuseHome {
 			'  <div class="fuse-home__skeleton"></div>',
 			'  <div class="fuse-home__skeleton"></div>',
 			'  <div class="fuse-home__skeleton"></div>',
-			'</div>'
+			'</div>',
+			'<div class="fuse-home__footer" data-fuse="footer"></div>'
 		].join('\n');
 
 		this.$root.html(html);
@@ -100,8 +101,28 @@ class FuseHome {
 				const data = (r && r.message) || {};
 				this.render_subtitle(data);
 				this.render_tiles(data.tiles || []);
+				this.render_footer(data.floor);
 			})
 			.catch((e) => this.render_error(e));
+	}
+
+	// A quiet line under the tiles, not a tile. Demo access to the phone screens
+	// from a desk; the real way in is the installed app.
+	render_footer(floor) {
+		const $footer = this.$root.find('[data-fuse="footer"]');
+		$footer.empty();
+		if (!floor || !floor.route) return;
+
+		const $link = $(
+			'<button type="button" class="fuse-home__footer-link">' +
+			'  <span class="fuse-home__footer-icon">&#128241;</span>' +
+			'  <span class="fuse-home__footer-label"></span>' +
+			'</button>'
+		);
+		// .text(), not markup — the label is data from the server.
+		$link.find('.fuse-home__footer-label').text(floor.label || 'Shop floor');
+		$link.on('click', () => frappe.set_route(floor.route));
+		$footer.append($link);
 	}
 
 	render_subtitle(data) {

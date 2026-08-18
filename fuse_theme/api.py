@@ -24,18 +24,6 @@ WIP_ISSUE = "Material Transfer for Manufacture"
 
 TILES = [
 	{
-		# The phone entry point. Lives in fuse_manufacturing (it moves stock, so it is
-		# behaviour, not decoration) and is therefore guarded by `requires_page` — the
-		# theme still installs and runs on a site without the integration app.
-		"key": "shop_floor",
-		"label": "Shop Floor",
-		"blurb": "Scan, count, confirm — on a phone or tablet",
-		"icon": "📱",
-		"route": ["fuse-floor"],
-		"requires_page": "fuse-floor",
-		"roles": ["Stock Controller", "Stock User", "Manufacturing User", "Manufacturing Manager"],
-	},
-	{
 		"key": "works_orders",
 		"label": "Works Orders",
 		"blurb": "Current manufacturing and production orders",
@@ -111,6 +99,17 @@ def get_home():
 
 	return {
 		"tiles": tiles,
+		# The shop-floor screens are NOT a tile. They live in fuse_manufacturing and
+		# their real entry point is the installed app, whose start_url opens them
+		# directly — an operator on a phone never sees this page at all. The footer
+		# link exists so the concept can be shown from a desk without giving it
+		# equal billing with the modules people use all day.
+		#
+		# None when fuse_manufacturing is not installed: the theme must run without
+		# it, and a dead link reads as a broken system.
+		"floor": {"route": "fuse-floor", "label": "Shop floor screens"}
+		if frappe.db.exists("Page", "fuse-floor")
+		else None,
 		"user": frappe.db.get_value("User", frappe.session.user, "full_name") or frappe.session.user,
 		"company": frappe.defaults.get_user_default("Company") or "",
 	}

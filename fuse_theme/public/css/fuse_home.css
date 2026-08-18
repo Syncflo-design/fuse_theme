@@ -278,3 +278,42 @@
 	font-size: 12px;
 	color: var(--fuse-muted, #66756D);
 }
+
+/* --- footer -------------------------------------------------------------- */
+/* The shop-floor screens, deliberately understated. They are demonstrated from
+ * here, not worked from here — the installed app opens them directly. Sized well
+ * under a tile so the modules keep the page's attention. */
+
+.fuse-home__footer {
+	margin-top: 28px;
+	padding-top: 14px;
+	border-top: 1px solid var(--fh-border, #DCE5E0);
+}
+
+.fuse-home__footer-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 6px 10px;
+	background: transparent;
+	border: 1px solid transparent;
+	border-radius: 6px;
+	font-size: 13px;
+	color: var(--fh-muted, #66756D);
+	cursor: pointer;
+}
+
+.fuse-home__footer-link:hover {
+	color: var(--fh-primary, #007E45);
+	border-color: var(--fh-border, #DCE5E0);
+}
+
+.fuse-home__footer-link:focus-visible {
+	outline: 2px solid var(--fh-primary, #007E45);
+	outline-offset: 2px;
+}
+
+.fuse-home__footer-icon {
+	font-size: 14px;
+	line-height: 1;
+}
