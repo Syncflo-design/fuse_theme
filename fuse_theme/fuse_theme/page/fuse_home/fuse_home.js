@@ -106,23 +106,46 @@ class FuseHome {
 			.catch((e) => this.render_error(e));
 	}
 
-	// A quiet line under the tiles, not a tile. Demo access to the phone screens
-	// from a desk; the real way in is the installed app.
+	// The phone screens, below the fold of the modules people work in all day.
+	//
+	// Same card language as a tile — icon chip, title, blurb, chevron — at a
+	// smaller scale and without the green top rule, so it reads as related but
+	// subordinate rather than as a tile someone forgot to align. The real way in
+	// is the installed app; this is how you show it from a desk.
 	render_footer(floor) {
 		const $footer = this.$root.find('[data-fuse="footer"]');
 		$footer.empty();
 		if (!floor || !floor.route) return;
 
-		const $link = $(
-			'<button type="button" class="fuse-home__footer-link">' +
-			'  <span class="fuse-home__footer-icon">&#128241;</span>' +
-			'  <span class="fuse-home__footer-label"></span>' +
+		// Inline SVG (Lucide "smartphone"), not an emoji: an emoji cannot take a
+		// colour from the stylesheet and renders differently on every platform.
+		const icon =
+			'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+			'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
+			'<rect x="5" y="2" width="14" height="20" rx="2"></rect><path d="M12 18h.01"></path></svg>';
+
+		const chevron =
+			'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+			'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
+			'<path d="M9 18l6-6-6-6"></path></svg>';
+
+		const $card = $(
+			'<button type="button" class="fuse-home__floor">' +
+			'  <span class="fuse-home__floor-icon">' + icon + '</span>' +
+			'  <span class="fuse-home__floor-body">' +
+			'    <span class="fuse-home__floor-label"></span>' +
+			'    <span class="fuse-home__floor-blurb">Scan, count and confirm on a phone or tablet</span>' +
+			'  </span>' +
+			'  <span class="fuse-home__floor-chevron">' + chevron + '</span>' +
 			'</button>'
 		);
+
 		// .text(), not markup — the label is data from the server.
-		$link.find('.fuse-home__footer-label').text(floor.label || 'Shop floor');
-		$link.on('click', () => frappe.set_route(floor.route));
-		$footer.append($link);
+		$card.find('.fuse-home__floor-label').text(floor.label || 'Shop floor');
+		$card.on('click', () => frappe.set_route(floor.route));
+
+		$footer.append('<div class="fuse-home__heading">Preview</div>');
+		$footer.append($card);
 	}
 
 	render_subtitle(data) {

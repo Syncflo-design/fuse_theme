@@ -279,41 +279,91 @@
 	color: var(--fuse-muted, #66756D);
 }
 
-/* --- footer -------------------------------------------------------------- */
-/* The shop-floor screens, deliberately understated. They are demonstrated from
- * here, not worked from here — the installed app opens them directly. Sized well
- * under a tile so the modules keep the page's attention. */
+/* ── Footer: the shop floor preview ─────────────────────────────────────── */
+/* Separated from Quick Launch by real space and a rule, so it reads as a
+ * different class of thing. Same card grammar as a tile — icon chip, title,
+ * blurb, chevron — but smaller, shadowless and without the green top rule, so
+ * it stays clearly subordinate to the modules above it. */
 
-.fuse-home__footer {
-	margin-top: 28px;
-	padding-top: 14px;
+.fuse-home__footer:not(:empty) {
+	margin-top: 40px;
+	padding-top: 24px;
 	border-top: 1px solid var(--fh-border, #DCE5E0);
 }
 
-.fuse-home__footer-link {
-	display: inline-flex;
+.fuse-home__floor {
+	display: flex;
 	align-items: center;
-	gap: 8px;
-	padding: 6px 10px;
-	background: transparent;
-	border: 1px solid transparent;
-	border-radius: 6px;
-	font-size: 13px;
-	color: var(--fh-muted, #66756D);
+	gap: 12px;
+	width: 100%;
+	max-width: 360px;
+	padding: 12px 14px;
+	text-align: left;
+	background: var(--fh-card, #FFFFFF);
+	border: 1px solid var(--fh-border, #DCE5E0);
+	border-radius: var(--fh-radius, 10px);
 	cursor: pointer;
+	transition: border-color var(--fh-t, 160ms ease), box-shadow var(--fh-t, 160ms ease),
+		transform var(--fh-t, 160ms ease);
 }
 
-.fuse-home__footer-link:hover {
-	color: var(--fh-primary, #007E45);
-	border-color: var(--fh-border, #DCE5E0);
+.fuse-home__floor:hover,
+.fuse-home__floor:focus-visible {
+	border-color: var(--fh-primary, #007E45);
+	box-shadow: var(--fuse-e2, 0 2px 6px rgba(22, 36, 28, .07));
+	transform: translateY(-1px);
+	outline: none;
 }
 
-.fuse-home__footer-link:focus-visible {
+.fuse-home__floor:focus-visible {
 	outline: 2px solid var(--fh-primary, #007E45);
 	outline-offset: 2px;
 }
 
-.fuse-home__footer-icon {
+.fuse-home__floor-icon {
+	flex: 0 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 34px;
+	height: 34px;
+	border-radius: var(--fuse-r, 8px);
+	background: var(--fh-tint, #E7F4ED);
+	color: var(--fh-primary-dark, #006034);
+}
+
+.fuse-home__floor-icon svg {
+	width: 18px;
+	height: 18px;
+}
+
+.fuse-home__floor-body {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.fuse-home__floor-label {
+	display: block;
 	font-size: 14px;
-	line-height: 1;
+	font-weight: 600;
+	color: var(--fh-text, #16241C);
+}
+
+.fuse-home__floor-blurb {
+	display: block;
+	margin-top: 1px;
+	font-size: 12px;
+	line-height: 1.4;
+	color: var(--fh-muted, #66756D);
+}
+
+.fuse-home__floor-chevron {
+	flex: 0 0 auto;
+	display: flex;
+	color: var(--fh-muted, #66756D);
+}
+
+.fuse-home__floor-chevron svg {
+	width: 16px;
+	height: 16px;
 }
