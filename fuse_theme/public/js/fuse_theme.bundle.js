@@ -116,3 +116,57 @@ if (window.frappe && frappe.router && frappe.router.on) {
 		go_home_if_at_root();
 	});
 }
+
+// ---------------------------------------------------------------------------
+// Installable on a phone.
+//
+// Chrome offers "Install app" when the page links a valid manifest over HTTPS.
+// Frappe has no hook for adding anything to the desk's <head>, so the links are
+// injected here instead — app_include_js runs on every desk page, which is
+// exactly the scope the manifest covers.
+//
+// No service worker. Chrome dropped that requirement for installability, and a
+// worker caching desk assets would fight the Frappe Cloud deploy cycle — a
+// stale bundle served from a phone's cache is the CDN gotcha with no way to
+// clear it. Installed means "own icon, own window", not "works offline": every
+// screen posts to Intacct and none of them can work without a connection.
+// ---------------------------------------------------------------------------
+
+const MANIFEST_HREF = '/assets/fuse_theme/manifest.json';
+const APPLE_ICON_HREF = '/assets/fuse_theme/images/fuse-app-192.png';
+
+function head_link(rel, href, extra) {
+	if (document.querySelector('link[rel="' + rel + '"]')) {
+		return;
+	}
+	const link = document.createElement('link');
+	link.rel = rel;
+	link.href = href;
+	Object.assign(link, extra || {});
+	document.head.appendChild(link);
+}
+
+function install_pwa_head() {
+	head_link('manifest', MANIFEST_HREF);
+
+	// iOS ignores the manifest and reads these instead. Safari's "Add to Home
+	// Screen" is manual there — there is no prompt to trigger — but the icon and
+	// the standalone window come from the meta tags.
+	head_link('apple-touch-icon', APPLE_ICON_HREF);
+
+	if (!document.querySelector('meta[name="apple-mobile-web-app-capable"]')) {
+		const capable = document.createElement('meta');
+		capable.name = 'apple-mobile-web-app-capable';
+		capable.content = 'yes';
+		document.head.appendChild(capable);
+	}
+
+	if (!document.querySelector('meta[name="theme-color"]')) {
+		const colour = document.createElement('meta');
+		colour.name = 'theme-color';
+		colour.content = '#17794a';
+		document.head.appendChild(colour);
+	}
+}
+
+install_pwa_head();
