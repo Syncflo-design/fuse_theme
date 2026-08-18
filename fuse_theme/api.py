@@ -24,6 +24,18 @@ WIP_ISSUE = "Material Transfer for Manufacture"
 
 TILES = [
 	{
+		# The phone entry point. Lives in fuse_manufacturing (it moves stock, so it is
+		# behaviour, not decoration) and is therefore guarded by `requires_page` — the
+		# theme still installs and runs on a site without the integration app.
+		"key": "shop_floor",
+		"label": "Shop Floor",
+		"blurb": "Scan, count, confirm — on a phone or tablet",
+		"icon": "📱",
+		"route": ["fuse-floor"],
+		"requires_page": "fuse-floor",
+		"roles": ["Stock Controller", "Stock User", "Manufacturing User", "Manufacturing Manager"],
+	},
+	{
 		"key": "works_orders",
 		"label": "Works Orders",
 		"blurb": "Current manufacturing and production orders",
@@ -90,7 +102,12 @@ def get_home():
 		# a permission they do not have.
 		if tile["route"][0] == "new" and not frappe.has_permission(tile["route"][1], "create"):
 			continue
-		tiles.append({k: v for k, v in tile.items() if k != "roles"})
+		# A tile belonging to another app is hidden when that app is not installed. A
+		# dead route reads as a broken system; a missing tile reads as a feature this
+		# site does not have, which is the truth.
+		if tile.get("requires_page") and not frappe.db.exists("Page", tile["requires_page"]):
+			continue
+		tiles.append({k: v for k, v in tile.items() if k not in ("roles", "requires_page")})
 
 	return {
 		"tiles": tiles,
