@@ -24,6 +24,21 @@ WIP_ISSUE = "Material Transfer for Manufacture"
 
 TILES = [
 	{
+		# Goods in. Lives in fuse_manufacturing — it moves stock — so it is guarded by
+		# `requires_page` and simply does not appear on a site without that app.
+		#
+		# Emoji here, not SVG, only because its four neighbours are emoji and one odd
+		# tile out looks like a fault. When the tile grid moves to an icon set, this
+		# moves with it.
+		"key": "receiving",
+		"label": "Receiving",
+		"blurb": "Book a delivery in against a purchase order",
+		"icon": "📥",
+		"route": ["fuse-receiving"],
+		"requires_page": "fuse-receiving",
+		"roles": ["Stock Controller", "Stock User", "Stock Manager"],
+	},
+	{
 		"key": "works_orders",
 		"label": "Works Orders",
 		"blurb": "Current manufacturing and production orders",
