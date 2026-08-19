@@ -61,6 +61,7 @@ LINKS = [
 	{"type": "Card Break", "label": "Master Data"},
 	{"type": "Link", "label": "Item", "link_type": "DocType", "link_to": "Item"},
 	{"type": "Link", "label": "Warehouse", "link_type": "DocType", "link_to": "Warehouse"},
+	{"type": "Link", "label": "BOM", "link_type": "DocType", "link_to": "BOM"},
 ]
 
 # Every `shortcut_name` must match a SHORTCUTS label and every `card_name` a Card Break
@@ -163,7 +164,13 @@ def _build(name, title, icon, content, shortcuts, links, sequence_id=None):
 
 	doc.label = name
 	doc.title = title
-	doc.module = "Fuse Theme"
+	# Stock, NOT Fuse Theme. A workspace is only in a user's allowed list if they have
+	# access to its module, and a non-admin has no documents in Fuse Theme — so the route
+	# fell through to a Page lookup and answered "Page fuse-stock-control does not exist".
+	# It worked for Administrator, who bypasses all of it, which is why it survived to a
+	# client demo on 2026-08-19.
+	doc.module = "Stock"
+	doc.app = "erpnext"
 	doc.icon = icon
 	doc.public = 1
 	doc.is_hidden = 0
