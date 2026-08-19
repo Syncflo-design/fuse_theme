@@ -84,6 +84,27 @@ TILES = [
 ]
 
 
+def _active_modules():
+	"""What the client has switched on, or everything if we cannot tell.
+
+	The switches live in fuse_manufacturing, which the theme must run without — so a
+	missing integration app means every tile shows. Failing open is right here: the
+	alternative is a home page that quietly loses its tiles because an unrelated app is
+	absent, which looks like the theme is broken.
+	"""
+	try:
+		from fuse_manufacturing import modules
+	except ImportError:
+		return {}
+
+	try:
+		return modules.active_modules()
+	except Exception:
+		# Installed but not yet migrated — the settings table may not exist on the first
+		# load after a deploy. Same reasoning: show everything rather than nothing.
+		return {}
+
+
 @frappe.whitelist()
 def get_home():
 	"""Tiles this user may actually use, plus what the header needs.
@@ -93,9 +114,15 @@ def get_home():
 	rather than like they lack access.
 	"""
 	roles = set(frappe.get_roles())
+	active = _active_modules()
 
 	tiles = []
 	for tile in TILES:
+		# Switched off by the client under Active Modules in Intacct Settings. Checked
+		# first because it is a decision someone made deliberately, where a role or a
+		# permission miss is usually an oversight.
+		if not active.get(tile["key"], True):
+			continue
 		if not roles.intersection(tile["roles"]):
 			continue
 		if tile["route"][0] in ("List", "new") and not frappe.has_permission(tile["route"][1], "read"):
@@ -123,7 +150,7 @@ def get_home():
 		# None when fuse_manufacturing is not installed: the theme must run without
 		# it, and a dead link reads as a broken system.
 		"floor": {"route": "fuse-floor", "label": "Shop floor screens"}
-		if frappe.db.exists("Page", "fuse-floor")
+		if frappe.db.exists("Page", "fuse-floor") and active.get("shop_floor", True)
 		else None,
 		"user": frappe.db.get_value("User", frappe.session.user, "full_name") or frappe.session.user,
 		"company": frappe.defaults.get_user_default("Company") or "",
