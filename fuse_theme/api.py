@@ -69,6 +69,18 @@ TILES = [
 		"roles": ["Stock Controller", "Stock User", "Stock Manager"],
 	},
 	{
+		# ERPNext's own Stock workspace — the full module, for someone who needs more than
+		# the shortcuts above. The route is the workspace SLUG for the same reason as
+		# stock_control below: ["Workspaces", "Stock"] builds a URL the desk answers with
+		# empty skeletons.
+		"key": "stock",
+		"label": "Stock",
+		"blurb": "General stock management",
+		"icon": "🗃",
+		"route": ["Workspaces", "Stock"],
+		"roles": ["Stock Controller", "Stock User", "Stock Manager"],
+	},
+	{
 		"key": "stock_control",
 		"label": "Stock Control",
 		"blurb": "Transfers, production and stock reports",
