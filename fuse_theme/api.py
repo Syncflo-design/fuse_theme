@@ -96,6 +96,26 @@ TILES = [
 ]
 
 
+def _all_tiles():
+	"""The tiles above, plus whatever another Fuse app contributes.
+
+	A separately sold part of Fuse ships as its own app and cannot edit this list. It
+	declares a `fuse_tiles` hook pointing at a callable that returns tiles in the same
+	shape; its tile is then filtered by the same rules and switched off by the same Active
+	Modules table as the built-in ones.
+
+	A contributor that raises is skipped. A missing tile is a poor outcome; a home page
+	that will not load because an optional app is half-installed is a worse one.
+	"""
+	tiles = list(TILES)
+	for method in frappe.get_hooks("fuse_tiles") or []:
+		try:
+			tiles.extend(frappe.get_attr(method)() or [])
+		except Exception:
+			continue
+	return tiles
+
+
 def _active_modules():
 	"""What the client has switched on, or everything if we cannot tell.
 
@@ -129,13 +149,15 @@ def get_home():
 	active = _active_modules()
 
 	tiles = []
-	for tile in TILES:
+	for tile in _all_tiles():
 		# Switched off by the client under Active Modules in Intacct Settings. Checked
 		# first because it is a decision someone made deliberately, where a role or a
 		# permission miss is usually an oversight.
 		if not active.get(tile["key"], True):
 			continue
-		if not roles.intersection(tile["roles"]):
+		# A tile that names no roles is for everyone — a contributed tile is not obliged
+		# to name any.
+		if tile.get("roles") and not roles.intersection(tile["roles"]):
 			continue
 		if tile["route"][0] in ("List", "new") and not frappe.has_permission(tile["route"][1], "read"):
 			continue
