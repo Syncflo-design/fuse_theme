@@ -108,6 +108,8 @@
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
 	gap: 16px;
+	width: 100%;
+	grid-column: 1 / -1;
 }
 
 /* The reference row — what work is based on, rather than the work itself. Separated by a
