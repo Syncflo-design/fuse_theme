@@ -219,6 +219,18 @@ class FuseHome {
 
 		$tiles.empty();
 
+		// Two rows, not one run. Everything without a group is an action — receive, plan,
+		// make, move — and reads as a verb. What carries `group` is reference: the BOM a job
+		// is built from, the project it is booked against. Same card, own grid, a rule
+		// between, so the eye stops rather than counting nine equal things.
+		const reference = tiles.filter((t) => t.group);
+
+		const $grid = $('<div class="fuse-home__grid"></div>').appendTo($tiles);
+		let $second = null;
+		if (reference.length) {
+			$second = $('<div class="fuse-home__grid fuse-home__grid--reference"></div>');
+		}
+
 		tiles.forEach((tile) => {
 			const html = [
 				'<button type="button" class="fuse-tile">',
@@ -245,8 +257,12 @@ class FuseHome {
 				this.go(tile);
 			});
 
-			$tiles.append($tile);
+			(tile.group ? $second : $grid).append($tile);
 		});
+
+		// Appended after the loop so the reference row always lands below the actions,
+		// whatever order the apps contributed their tiles in.
+		if ($second) $tiles.append($second);
 	}
 
 	render_error(e) {

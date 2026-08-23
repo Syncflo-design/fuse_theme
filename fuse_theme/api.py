@@ -61,6 +61,10 @@ TILES = [
 		"blurb": "What each product is made of",
 		"icon": "📋",
 		"route": ["List", "BOM"],
+		# Set apart on its own row. A BOM is not something you DO — it is what the doing is
+		# based on, the same way a project is the thing work is booked against. Mixing them
+		# into the run of actions made the row read as nine equal verbs.
+		"group": "reference",
 		"roles": ["Stock Controller", "Manufacturing User", "Manufacturing Manager"],
 	},
 	{

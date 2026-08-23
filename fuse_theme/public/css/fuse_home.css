@@ -99,9 +99,22 @@
 /* ── Tiles ──────────────────────────────────────────────────────────────── */
 
 .fuse-home__tiles {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.fuse-home__grid {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
 	gap: 16px;
+}
+
+/* The reference row — what work is based on, rather than the work itself. Separated by a
+   rule and a little air so the row above reads as a complete set of actions. */
+.fuse-home__grid--reference {
+	padding-top: 16px;
+	border-top: 1px solid var(--fh-border);
 }
 
 .fuse-tile {
@@ -211,7 +224,7 @@
 /* ── Mobile — the floor uses this one-handed ────────────────────────────── */
 
 @media (max-width: 767px) {
-	.fuse-home__tiles {
+	.fuse-home__grid {
 		grid-template-columns: 1fr;
 	}
 
