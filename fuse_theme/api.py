@@ -108,12 +108,16 @@ TILES = [
 		# ERPNext's own Stock workspace — the full module, for someone who needs more than
 		# the shortcuts above. The route is the workspace SLUG for the same reason as
 		# stock_control below: ["Workspaces", "Stock"] builds a URL the desk answers with
-		# empty skeletons.
+		# empty skeletons. That is what this line said for weeks while doing the opposite.
+		#
+		# OFF by default (see fuse_manufacturing.modules). Two tiles onto a stock workspace
+		# read as two doors into the same room, and Stock Control is the curated one. A
+		# client whose own admin wants the full module switches it on.
 		"key": "stock",
 		"label": "Stock",
 		"blurb": "General stock management",
 		"icon": "🗃",
-		"route": ["Workspaces", "Stock"],
+		"route": ["stock"],
 		"roles": ["Stock Controller", "Stock User", "Stock Manager"],
 	},
 	{

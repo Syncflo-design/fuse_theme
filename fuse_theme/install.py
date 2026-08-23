@@ -45,6 +45,7 @@ LINKS = [
 	{"type": "Card Break", "label": "Movements"},
 	{"type": "Link", "label": "Stock Entry", "link_type": "DocType", "link_to": "Stock Entry"},
 	{"type": "Link", "label": "Work Order", "link_type": "DocType", "link_to": "Work Order"},
+	# Day to day: what is where, what moved, what is coming.
 	{"type": "Card Break", "label": "Reports"},
 	{"type": "Link", "label": "Stock Balance", "link_type": "Report", "link_to": "Stock Balance",
 	 "is_query_report": 1},
@@ -52,12 +53,26 @@ LINKS = [
 	 "is_query_report": 1},
 	{"type": "Link", "label": "Stock Projected Qty", "link_type": "Report",
 	 "link_to": "Stock Projected Qty", "is_query_report": 1},
+	{"type": "Link", "label": "Warehouse Wise Stock Balance", "link_type": "Report",
+	 "link_to": "Warehouse Wise Stock Balance", "is_query_report": 1},
 	# Ours, not ERPNext's Purchase Order Analysis. That report is built for a business that
 	# receipts and bills in ERPNext; here it does neither, so its Received Qty, Billed
 	# Amount and Amount to Bill columns are permanently zero and its chart plots one of
 	# them. This shows what is still coming, where it is going and when it was due.
 	{"type": "Link", "label": "Stock on Order", "link_type": "Report",
 	 "link_to": "Stock on Order", "is_query_report": 1},
+	# The ones asked at month end or when something looks wrong, kept apart from the daily
+	# four so the first card stays scannable.
+	{"type": "Card Break", "label": "Analysis"},
+	# A Page, not a report — ERPNext calls it Stock Summary and routes it at stock-balance.
+	# Given the report of almost the same name sits in the card above, the label matters.
+	{"type": "Link", "label": "Stock Summary", "link_type": "Page", "link_to": "stock-balance"},
+	{"type": "Link", "label": "Stock Ageing", "link_type": "Report", "link_to": "Stock Ageing",
+	 "is_query_report": 1},
+	{"type": "Link", "label": "Stock Analytics", "link_type": "Report", "link_to": "Stock Analytics",
+	 "is_query_report": 1},
+	{"type": "Link", "label": "Item Price Stock", "link_type": "Report",
+	 "link_to": "Item Price Stock", "is_query_report": 1},
 	{"type": "Card Break", "label": "Master Data"},
 	{"type": "Link", "label": "Item", "link_type": "DocType", "link_to": "Item"},
 	{"type": "Link", "label": "Warehouse", "link_type": "DocType", "link_to": "Warehouse"},
@@ -72,9 +87,10 @@ CONTENT = [
 	 "data": {"text": '<span class="h4"><b>Stock Control</b></span>', "col": 12}},
 	{"id": "fuse_sc_s1", "type": "shortcut", "data": {"shortcut_name": "Transfers", "col": 4}},
 	{"id": "fuse_sc_s3", "type": "shortcut", "data": {"shortcut_name": "Production", "col": 4}},
-	{"id": "fuse_sc_c1", "type": "card", "data": {"card_name": "Movements", "col": 4}},
-	{"id": "fuse_sc_c2", "type": "card", "data": {"card_name": "Reports", "col": 4}},
-	{"id": "fuse_sc_c3", "type": "card", "data": {"card_name": "Master Data", "col": 4}},
+	{"id": "fuse_sc_c1", "type": "card", "data": {"card_name": "Movements", "col": 3}},
+	{"id": "fuse_sc_c2", "type": "card", "data": {"card_name": "Reports", "col": 3}},
+	{"id": "fuse_sc_c4", "type": "card", "data": {"card_name": "Analysis", "col": 3}},
+	{"id": "fuse_sc_c3", "type": "card", "data": {"card_name": "Master Data", "col": 3}},
 ]
 
 
