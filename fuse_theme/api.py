@@ -24,6 +24,21 @@ WIP_ISSUE = "Material Transfer for Manufacture"
 
 TILES = [
 	{
+		# The front of the buying chain, ahead of Receiving, which is the back of it.
+		#
+		# On a site integrated with Intacct the purchase order itself is mirrored FROM
+		# Intacct and is read-only here, so this is a request that someone acts on there.
+		# Standalone, it is the whole requisition step. Either way it is where a shortage
+		# on the floor becomes a documented ask rather than a phone call.
+		"key": "material_request",
+		"label": "Material Request",
+		"blurb": "Ask for what the floor needs",
+		"icon": "📝",
+		"route": ["List", "Material Request"],
+		"roles": ["Stock Controller", "Stock User", "Stock Manager", "Purchase User",
+		          "Purchase Manager", "Manufacturing User", "Manufacturing Manager"],
+	},
+	{
 		# Goods in. Lives in fuse_manufacturing — it moves stock — so it is guarded by
 		# `requires_page` and simply does not appear on a site without that app.
 		#
