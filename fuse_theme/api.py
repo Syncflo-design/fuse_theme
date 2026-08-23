@@ -39,6 +39,27 @@ TILES = [
 		"roles": ["Stock Controller", "Stock User", "Stock Manager"],
 	},
 	{
+		# Ahead of Works Orders on purpose: the tiles read left to right as the process
+		# does — what a thing is made of, what that means we should make, then making it.
+		"key": "boms",
+		"label": "BOMs",
+		"blurb": "What each product is made of",
+		"icon": "📋",
+		"route": ["List", "BOM"],
+		"roles": ["Stock Controller", "Manufacturing User", "Manufacturing Manager"],
+	},
+	{
+		"key": "production_plan",
+		"label": "Production Plan",
+		"blurb": "Work out what to make and what to buy",
+		"icon": "🗓",
+		"route": ["List", "Production Plan"],
+		# Manufacturing User is the only role ERPNext grants Production Plan out of the
+		# box. The others are here for sites that have widened it; the permission check
+		# below still decides.
+		"roles": ["Manufacturing User", "Manufacturing Manager", "Stock Controller"],
+	},
+	{
 		"key": "works_orders",
 		"label": "Works Orders",
 		"blurb": "Current manufacturing and production orders",
