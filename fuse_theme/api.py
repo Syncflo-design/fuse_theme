@@ -119,13 +119,13 @@ def _all_tiles():
 def _active_modules():
 	"""What the client has switched on, or everything if we cannot tell.
 
-	The switches live in fuse_manufacturing, which the theme must run without — so a
-	missing integration app means every tile shows. Failing open is right here: the
-	alternative is a home page that quietly loses its tiles because an unrelated app is
-	absent, which looks like the theme is broken.
+	The switches live in fuse_core, which the theme must run without — so a site with no
+	Fuse apps at all shows every tile. Failing open is right here: the alternative is a home
+	page that quietly loses its tiles because an unrelated app is absent, which looks like
+	the theme is broken.
 	"""
 	try:
-		from fuse_manufacturing import modules
+		from fuse_core import modules
 	except ImportError:
 		return {}
 
