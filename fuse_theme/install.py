@@ -51,8 +51,11 @@ LINKS = [
 	 "is_query_report": 1},
 	{"type": "Link", "label": "Stock Ledger", "link_type": "Report", "link_to": "Stock Ledger",
 	 "is_query_report": 1},
-	{"type": "Link", "label": "Stock Projected Qty", "link_type": "Report",
-	 "link_to": "Stock Projected Qty", "is_query_report": 1},
+	# Ours, not ERPNext's Stock Projected Qty. Same report and same numbers — it calls
+	# theirs — minus the Description column, which is empty on every row because Intacct
+	# has nothing that maps onto it.
+	{"type": "Link", "label": "Projected Stock", "link_type": "Report",
+	 "link_to": "Projected Stock", "is_query_report": 1},
 	{"type": "Link", "label": "Warehouse Wise Stock Balance", "link_type": "Report",
 	 "link_to": "Warehouse Wise Stock Balance", "is_query_report": 1},
 	# Ours, not ERPNext's Purchase Order Analysis. That report is built for a business that
