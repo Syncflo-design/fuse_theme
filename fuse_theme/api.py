@@ -115,6 +115,18 @@ TILES = [
 		"roles": ["Stock Controller", "Stock User", "Stock Manager"],
 	},
 	{
+		# Sits between making and shipping because that is where it belongs in the day: a
+		# batch is made, it is checked, it goes out. Only appears where the client actually
+		# inspects something — the switch is off on a site that does not.
+		"key": "quality",
+		"label": "Quality",
+		"blurb": "Check a batch against its specification",
+		"icon": "🔬",
+		"route": ["List", "Quality Inspection"],
+		"roles": ["Stock Controller", "Stock User", "Stock Manager", "Manufacturing User",
+		          "Manufacturing Manager", "Quality Manager"],
+	},
+	{
 		# Goods out, and the mirror of Receiving: the same screen pointed the other way. Last
 		# of the actions because it is the end of the line — everything above it puts stock
 		# somewhere, and this is what takes it away again.
