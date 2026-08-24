@@ -85,18 +85,6 @@ TILES = [
 		"roles": ["Manufacturing User", "Manufacturing Manager", "Stock Controller"],
 	},
 	{
-		# Goods out, and the mirror of Receiving above: same screen pointed the other way,
-		# living in fuse_manufacturing because it moves stock, so it simply does not appear
-		# on a site without that app.
-		"key": "picking",
-		"label": "Picking",
-		"blurb": "Send goods out against a customer order",
-		"icon": "🚚",
-		"route": ["fuse-picking"],
-		"requires_page": "fuse-picking",
-		"roles": ["Stock Controller", "Stock User", "Stock Manager"],
-	},
-	{
 		"key": "works_orders",
 		"label": "Works Orders",
 		"blurb": "Current manufacturing and production orders",
@@ -124,6 +112,21 @@ TILES = [
 		"icon": "⇄",
 		"route": ["new", "Stock Entry"],
 		"options": {"stock_entry_type": TRANSFER},
+		"roles": ["Stock Controller", "Stock User", "Stock Manager"],
+	},
+	{
+		# Goods out, and the mirror of Receiving: the same screen pointed the other way. Last
+		# of the actions because it is the end of the line — everything above it puts stock
+		# somewhere, and this is what takes it away again.
+		#
+		# Lives in fuse_manufacturing because it moves stock, so it simply does not appear on
+		# a site without that app.
+		"key": "picking",
+		"label": "Picking",
+		"blurb": "Send goods out against a customer order",
+		"icon": "🚚",
+		"route": ["fuse-picking"],
+		"requires_page": "fuse-picking",
 		"roles": ["Stock Controller", "Stock User", "Stock Manager"],
 	},
 	{
