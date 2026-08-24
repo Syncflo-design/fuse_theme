@@ -13,7 +13,7 @@
 //   4. CSS lives in its own file, linked from here, so this stays small.
 // ============================================================================
 
-const BUILD_MARKER = 'v0.6.0-2026-08-23-reference-row';
+const BUILD_MARKER = 'v0.6.1-2026-08-23-second-row';
 
 frappe.pages['fuse-home'].on_page_load = function (wrapper) {
 	const page = frappe.ui.make_app_page({
@@ -219,10 +219,10 @@ class FuseHome {
 
 		$tiles.empty();
 
-		// Two rows, not one run. Everything without a group is an action — receive, plan,
-		// make, move — and reads as a verb. What carries `group` is reference: the BOM a job
-		// is built from, the project it is booked against. Same card, own grid, a rule
-		// between, so the eye stops rather than counting nine equal things.
+		// Two rows, not one run. Everything without a group is a step that moves stock —
+		// receive, plan, make, move. What carries `group` does not: a request for material,
+		// the BOM a job is built from, the project it is booked against. Same card, own
+		// grid, a rule between, so the eye stops rather than counting nine equal things.
 		const reference = tiles.filter((t) => t.group);
 
 		const $grid = $('<div class="fuse-home__grid"></div>').appendTo($tiles);

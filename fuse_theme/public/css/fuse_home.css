@@ -112,8 +112,9 @@
 	grid-column: 1 / -1;
 }
 
-/* The reference row — what work is based on, rather than the work itself. Separated by a
-   rule and a little air so the row above reads as a complete set of actions. */
+/* The second row — what is asked for or referred to, rather than a step that moves stock.
+   Separated by a rule and a little air so the row above reads as a complete set of
+   actions. */
 .fuse-home__grid--reference {
 	padding-top: 16px;
 	border-top: 1px solid var(--fh-border);

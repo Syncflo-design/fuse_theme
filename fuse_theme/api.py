@@ -24,17 +24,23 @@ WIP_ISSUE = "Material Transfer for Manufacture"
 
 TILES = [
 	{
-		# The front of the buying chain, ahead of Receiving, which is the back of it.
+		# On the second row with BOMs and Projects rather than in the run of actions: this
+		# states what is needed, it does not move anything. The moving is Receiving's job,
+		# further down.
 		#
 		# On a site integrated with Intacct the purchase order itself is mirrored FROM
-		# Intacct and is read-only here, so this is a request that someone acts on there.
-		# Standalone, it is the whole requisition step. Either way it is where a shortage
-		# on the floor becomes a documented ask rather than a phone call.
+		# Intacct and is read-only here, so this is a request someone acts on there.
+		# Standalone, it is the whole requisition step.
+		#
+		# The blurb names all of what the record does. A Material Request can ask to buy, to
+		# move stock between warehouses, or to make something — and it is raised by stores or
+		# a planner as often as by anyone on the floor, so it does not claim an audience.
 		"key": "material_request",
 		"label": "Material Request",
-		"blurb": "Ask for what the floor needs",
+		"blurb": "Request material to buy, move or make",
 		"icon": "📝",
 		"route": ["List", "Material Request"],
+		"group": "reference",
 		"roles": ["Stock Controller", "Stock User", "Stock Manager", "Purchase User",
 		          "Purchase Manager", "Manufacturing User", "Manufacturing Manager"],
 	},
