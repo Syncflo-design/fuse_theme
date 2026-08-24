@@ -85,6 +85,18 @@ TILES = [
 		"roles": ["Manufacturing User", "Manufacturing Manager", "Stock Controller"],
 	},
 	{
+		# Goods out, and the mirror of Receiving above: same screen pointed the other way,
+		# living in fuse_manufacturing because it moves stock, so it simply does not appear
+		# on a site without that app.
+		"key": "picking",
+		"label": "Picking",
+		"blurb": "Send goods out against a customer order",
+		"icon": "🚚",
+		"route": ["fuse-picking"],
+		"requires_page": "fuse-picking",
+		"roles": ["Stock Controller", "Stock User", "Stock Manager"],
+	},
+	{
 		"key": "works_orders",
 		"label": "Works Orders",
 		"blurb": "Current manufacturing and production orders",
@@ -236,6 +248,11 @@ def get_home():
 		"floor": {"route": "fuse-floor", "label": "Shop floor screens"}
 		if frappe.db.exists("Page", "fuse-floor") and active.get("shop_floor", True)
 		else None,
+		# Help, on every instance. The guides ship with the apps, so this is never a link to
+		# an empty page — which is what it would have been on any site nobody uploaded to.
+		"training": {"route": "fuse-training", "label": "Guides"}
+		if frappe.db.exists("Page", "fuse-training")
+		else None,
 		"user": frappe.db.get_value("User", frappe.session.user, "full_name") or frappe.session.user,
 		"company": frappe.defaults.get_user_default("Company") or "",
 	}
@@ -246,13 +263,38 @@ def get_home():
 TRAINING_FOLDER = "Home/Fuse Training"
 
 
+def _shipped_guides():
+	"""Guides that travel with the installed apps.
+
+	Each Fuse app declares its own through the `fuse_guides` hook, so Manufacturing ships the
+	stock guides and Projects will ship the project ones — the theme, which owns the page
+	they appear on, needs to know about neither.
+
+	A contributor that raises is skipped. A missing guide is a poor outcome; a Training page
+	that will not load because one app is half-installed is a worse one.
+	"""
+	guides = []
+	for method in frappe.get_hooks("fuse_guides") or []:
+		try:
+			guides.extend(frappe.get_attr(method)() or [])
+		except Exception:
+			continue
+	return guides
+
+
 @frappe.whitelist()
 def get_training_documents():
-	"""The guides, newest change first.
+	"""The guides: what the installed apps ship, plus whatever this site has uploaded.
 
-	Read from the folder rather than a list in code: replacing a guide is then an upload and
-	nothing else — no code change, no deploy. A document nobody can open is worse than no
-	document, so private files are excluded rather than listed and then refused.
+	Shipped guides mean a new instance is never installed without help. Uploads are read
+	from the folder rather than a list in code, so replacing one on a single site is an
+	upload and nothing else — no code change, no deploy.
+
+	An upload with the same title as a shipped guide REPLACES it. That is how a client puts
+	their own screenshots in front of ours without anyone editing an app.
+
+	A document nobody can open is worse than no document, so private files are excluded
+	rather than listed and then refused.
 	"""
 	files = frappe.get_all(
 		"File",
@@ -261,23 +303,25 @@ def get_training_documents():
 		order_by="file_name asc",
 	)
 
-	documents = []
+	# Shipped first, so an upload of the same name lands on top of it.
+	by_title = {guide["title"]: dict(guide, shipped=True) for guide in _shipped_guides()}
+
 	for f in files:
 		name = f.file_name or ""
-		documents.append(
-			{
-				# Drop the extension and any leading number used to force the order — the
-				# reader wants "Item Transfer", not "02 Item Transfer.pdf".
-				"title": _readable(name),
-				"url": f.file_url,
-				"is_pdf": name.lower().endswith(".pdf"),
-				"size": _file_size(f.file_size),
-				"updated": frappe.utils.format_date(f.modified, "d MMM yyyy"),
-			}
-		)
+		# Drop the extension and any leading number used to force the order — the reader
+		# wants "Item Transfer", not "02 Item Transfer.pdf".
+		title = _readable(name)
+		by_title[title] = {
+			"title": title,
+			"url": f.file_url,
+			"is_pdf": name.lower().endswith(".pdf"),
+			"size": _file_size(f.file_size),
+			"updated": frappe.utils.format_date(f.modified, "d MMM yyyy"),
+			"shipped": False,
+		}
 
 	return {
-		"documents": documents,
+		"documents": sorted(by_title.values(), key=lambda d: d["title"].lower()),
 		"folder": TRAINING_FOLDER,
 		"can_upload": frappe.has_permission("File", "create"),
 	}

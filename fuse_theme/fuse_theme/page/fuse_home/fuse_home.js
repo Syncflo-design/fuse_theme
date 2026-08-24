@@ -13,7 +13,7 @@
 //   4. CSS lives in its own file, linked from here, so this stays small.
 // ============================================================================
 
-const BUILD_MARKER = 'v0.6.1-2026-08-23-second-row';
+const BUILD_MARKER = 'v0.7.0-2026-08-23-guides';
 
 frappe.pages['fuse-home'].on_page_load = function (wrapper) {
 	const page = frappe.ui.make_app_page({
@@ -101,7 +101,7 @@ class FuseHome {
 				const data = (r && r.message) || {};
 				this.render_subtitle(data);
 				this.render_tiles(data.tiles || []);
-				this.render_footer(data.floor);
+				this.render_footer(data.floor, data.training);
 			})
 			.catch((e) => this.render_error(e));
 	}
@@ -112,10 +112,10 @@ class FuseHome {
 	// smaller scale and without the green top rule, so it reads as related but
 	// subordinate rather than as a tile someone forgot to align. The real way in
 	// is the installed app; this is how you show it from a desk.
-	render_footer(floor) {
+	render_footer(floor, training) {
 		const $footer = this.$root.find('[data-fuse="footer"]');
 		$footer.empty();
-		if (!floor || !floor.route) return;
+		if ((!floor || !floor.route) && (!training || !training.route)) return;
 
 		// Inline SVG (Lucide "smartphone"), not an emoji: an emoji cannot take a
 		// colour from the stylesheet and renders differently on every platform.
@@ -144,8 +144,32 @@ class FuseHome {
 		$card.find('.fuse-home__floor-label').text(floor.label || 'Shop floor');
 		$card.on('click', () => frappe.set_route(floor.route));
 
-		$footer.append('<div class="fuse-home__heading">Preview</div>');
-		$footer.append($card);
+		$footer.append('<div class="fuse-home__heading">Also here</div>');
+		if (floor && floor.route) $footer.append($card);
+
+		// The guides. Same card, a book instead of a phone — help belongs where people
+		// already are, not behind a menu they have to be told about.
+		if (training && training.route) {
+			const book =
+				'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+				'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
+				'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>' +
+				'<path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>';
+
+			const $guides = $(
+				'<button type="button" class="fuse-home__floor">' +
+				'  <span class="fuse-home__floor-icon">' + book + '</span>' +
+				'  <span class="fuse-home__floor-body">' +
+				'    <span class="fuse-home__floor-label"></span>' +
+				'    <span class="fuse-home__floor-blurb">How to do each of these, step by step</span>' +
+				'  </span>' +
+				'  <span class="fuse-home__floor-chevron">' + chevron + '</span>' +
+				'</button>'
+			);
+			$guides.find('.fuse-home__floor-label').text(training.label || 'Guides');
+			$guides.on('click', () => frappe.set_route(training.route));
+			$footer.append($guides);
+		}
 	}
 
 	render_subtitle(data) {
