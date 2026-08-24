@@ -307,12 +307,26 @@
 	border-top: 1px solid var(--fh-border, #DCE5E0);
 }
 
+/* The cards below the rule sit side by side, on the same grid as the tiles above so the
+   two halves of the page line up. The heading spans the row rather than becoming a column
+   of its own. */
+.fuse-home__footer {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+	gap: 16px;
+	align-items: start;
+}
+
+.fuse-home__footer .fuse-home__heading {
+	grid-column: 1 / -1;
+	margin-bottom: 0;
+}
+
 .fuse-home__floor {
 	display: flex;
 	align-items: center;
 	gap: 12px;
 	width: 100%;
-	max-width: 360px;
 	padding: 12px 14px;
 	text-align: left;
 	background: var(--fh-card, #FFFFFF);
