@@ -60,8 +60,26 @@ TILES = [
 		"roles": ["Stock Controller", "Stock User", "Stock Manager"],
 	},
 	{
-		# Ahead of Works Orders on purpose: the tiles read left to right as the process
-		# does — what a thing is made of, what that means we should make, then making it.
+		# The specifications a batch is measured against. A master file in the same sense a
+		# BOM is: a recipe says what goes in, a template says what the result has to be.
+		# Both are set up once by the people who own the product, not touched during a shift.
+		#
+		# Same switch key as the Quality tile on purpose — a client who does not inspect
+		# should not see either, and a second switch that always matched the first would be
+		# a setting nobody could answer.
+		"key": "quality",
+		"label": "Quality Templates",
+		"blurb": "The specification each product is measured against",
+		"icon": "📐",
+		"route": ["List", "Quality Inspection Template"],
+		"group": "reference",
+		"order": 99,
+		"roles": ["Manufacturing Manager", "Stock Manager", "Quality Manager"],
+	},
+	{
+		# Set apart on the reference row: a BOM is not something you DO, it is what the doing
+		# is based on. Quality sits beside it for the same reason — a specification is what a
+		# batch is measured against.
 		"key": "boms",
 		"label": "BOMs",
 		"blurb": "What each product is made of",
@@ -115,11 +133,14 @@ TILES = [
 		"roles": ["Stock Controller", "Stock User", "Stock Manager"],
 	},
 	{
-		# Sits between making and shipping because that is where it belongs in the day: a
-		# batch is made, it is checked, it goes out. Only appears where the client actually
-		# inspects something — the switch is off on a site that does not.
+		# An action, and it sits where it happens in the day: a batch is made, it is checked,
+		# it goes out. The SPECIFICATION it is checked against is a master file and lives on
+		# the reference row — see the Quality Templates tile.
+		#
+		# Only appears where the client actually inspects something; the switch is off on a
+		# site that does not.
 		"key": "quality",
-		"label": "Quality",
+		"label": "Quality Inspection",
 		"blurb": "Check a batch against its specification",
 		"icon": "🔬",
 		"route": ["List", "Quality Inspection"],

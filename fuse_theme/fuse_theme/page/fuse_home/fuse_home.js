@@ -247,7 +247,12 @@ class FuseHome {
 		// receive, plan, make, move. What carries `group` does not: a request for material,
 		// the BOM a job is built from, the project it is booked against. Same card, own
 		// grid, a rule between, so the eye stops rather than counting nine equal things.
-		const reference = tiles.filter((t) => t.group);
+		// Ordered explicitly, because the natural order puts every contributed tile after
+		// every built-in one — an app's tile would always land last just because its app is
+		// read last, which is not a decision anybody made.
+		const reference = tiles
+			.filter((t) => t.group)
+			.sort((a, b) => (a.order || 0) - (b.order || 0));
 
 		const $grid = $('<div class="fuse-home__grid"></div>').appendTo($tiles);
 		let $second = null;
