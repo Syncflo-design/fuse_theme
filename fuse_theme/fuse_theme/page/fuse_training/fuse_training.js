@@ -82,7 +82,11 @@ class FuseTraining {
 			$card.attr('href', doc.url);
 			$card.find('.fuse-doc__icon').text(doc.is_pdf ? '📄' : '📎');
 			$card.find('.fuse-doc__title').text(doc.title);
-			$card.find('.fuse-doc__meta').text(`${doc.size} · updated ${doc.updated}`);
+			// A shipped guide has no size or date — it is an app asset, not a File record.
+			// Interpolating them regardless printed "undefined · updated undefined" under
+			// every guide the app ships, which is most of them.
+			const meta = [doc.size, doc.updated && `updated ${doc.updated}`].filter(Boolean);
+			$card.find('.fuse-doc__meta').text(meta.join(' · '));
 			$list.append($card);
 		});
 	}
