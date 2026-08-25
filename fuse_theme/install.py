@@ -325,8 +325,21 @@ def _set_default_workspace():
 	return len(users)
 
 
+@frappe.whitelist()
 def after_install():
-	"""Put the site's theme-owned configuration in step with this version of the app."""
+	"""Put the site's theme-owned configuration in step with this version of the app.
+
+	Whitelisted so it can be RE-RUN by hand. The module docstring has claimed that since
+	this file was written and the decorator was never actually here, which was only found
+	when a deploy shipped the Quality workspace and after_migrate did not build it — the
+	route answered with the home page and there was no way to close the gap short of
+	another deploy.
+	"""
+	# Only over HTTP. The same function is the after_install and after_migrate hook, where
+	# there is no session to check and a refusal would take the whole migrate down.
+	if frappe.request:
+		frappe.only_for("System Manager")
+
 	landing = _build(
 		LANDING, "Fuse", "organization", LANDING_CONTENT, LANDING_SHORTCUTS, [],
 		# First in the desk, ahead of ERPNext's own workspaces.

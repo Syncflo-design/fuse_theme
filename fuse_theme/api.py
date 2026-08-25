@@ -124,24 +124,38 @@ TILES = [
 	},
 	{
 		# An action, and it sits where it happens in the day: a batch is made, it is checked,
-		# it goes out.
-		#
-		# Opens the Quality workspace rather than the inspection list. Quality is bigger
-		# than one list — procedures, goals, reviews, corrective actions and the instrument
-		# register all belong to it, and a tile that landed on inspections made the rest
-		# look absent when it was only unlinked. The workspace leads with inspections, so
-		# the common case is still one click.
+		# it goes out. One inspection per works order or production run, which is why this
+		# is a list of documents and not a setup page.
 		#
 		# Only appears where the client actually inspects something; the switch is off on a
 		# site that does not.
-		"key": "quality",
-		"label": "Quality",
-		"blurb": "Inspections, specifications, procedures and reviews",
+		"key": "quality_inspection",
+		"module": "quality",
+		"label": "Quality Inspection",
+		"blurb": "Check a batch against its specification",
 		"icon": "🔬",
-		# The workspace SLUG, for the reason spelled out on the Stock Control tile below.
-		"route": ["fuse-quality"],
+		"route": ["List", "Quality Inspection"],
 		"roles": ["Stock Controller", "Stock User", "Stock Manager", "Manufacturing User",
 		          "Manufacturing Manager", "Quality Manager"],
+	},
+	{
+		# Everything quality that is NOT the daily inspection: the specifications it is
+		# measured against, the instruments the readings come off, the procedures, goals,
+		# reviews and corrective actions. Set up once and referred to, so it belongs on the
+		# reference row beside BOMs rather than in the run of actions.
+		#
+		# Its own key so it can be replaced or hidden on its own, but the Quality switch —
+		# a client who does not inspect should not see either of these.
+		"key": "quality_setup",
+		"module": "quality",
+		"label": "Quality",
+		"blurb": "Specifications, instruments, procedures and reviews",
+		"icon": "📐",
+		# The workspace SLUG, for the reason spelled out on the Stock Control tile below.
+		"route": ["fuse-quality"],
+		"group": "reference",
+		"order": 99,
+		"roles": ["Stock Manager", "Manufacturing Manager", "Quality Manager"],
 	},
 	{
 		# Goods out, and the mirror of Receiving: the same screen pointed the other way. Last
