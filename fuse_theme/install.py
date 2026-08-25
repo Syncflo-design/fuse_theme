@@ -97,6 +97,101 @@ CONTENT = [
 ]
 
 
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Quality
+# ──────────────────────────────────────────────────────────────────────────────
+#
+# The home page can only carry a tile or two, and Quality is bigger than that. ERPNext
+# ships an entire Quality Management module — procedures, goals, reviews, corrective
+# actions, customer feedback — alongside the Quality Inspection that sits in Stock. Two
+# tiles reached the inspection list and the template list and nothing else, which made the
+# rest look absent when it was only unlinked.
+#
+# So the Quality tile opens this instead: one place holding everything quality, arranged
+# the way the ISO clauses fall rather than the way ERPNext files the doctypes.
+
+QUALITY_WORKSPACE = "Fuse Quality"
+
+QUALITY_SHORTCUTS = [
+	{
+		"label": "Inspections",
+		"type": "DocType",
+		"link_to": "Quality Inspection",
+		"color": "Blue",
+	},
+	{
+		# The one people actually go looking for. A rejected batch is the reason someone
+		# opens this page at all, and finding it should not mean filtering a list first.
+		"label": "Rejected",
+		"type": "DocType",
+		"link_to": "Quality Inspection",
+		"stats_filter": json.dumps({"status": "Rejected"}),
+		"color": "Red",
+	},
+	{
+		"label": "Procedures",
+		"type": "DocType",
+		"link_to": "Quality Procedure",
+		"color": "Green",
+	},
+]
+
+QUALITY_LINKS = [
+	# 8.6 — releasing what was made, and 7.1.5.2, the instruments the readings came off.
+	{"type": "Card Break", "label": "Inspection"},
+	{"type": "Link", "label": "Quality Inspection", "link_type": "DocType",
+	 "link_to": "Quality Inspection"},
+	{"type": "Link", "label": "Quality Inspection Template", "link_type": "DocType",
+	 "link_to": "Quality Inspection Template"},
+	{"type": "Link", "label": "Quality Inspection Parameter", "link_type": "DocType",
+	 "link_to": "Quality Inspection Parameter"},
+	{"type": "Link", "label": "Parameter Group", "link_type": "DocType",
+	 "link_to": "Quality Inspection Parameter Group"},
+	# Ours. A reading is only evidence if the instrument it came off was in calibration,
+	# so the register belongs beside the inspections rather than in a corner of its own.
+	{"type": "Link", "label": "Measuring Instruments", "link_type": "DocType",
+	 "link_to": "Fuse Measuring Instrument"},
+
+	# 7.5 — the documented information itself: how work is done, and what it is aiming at.
+	{"type": "Card Break", "label": "Procedures and goals"},
+	{"type": "Link", "label": "Quality Procedure", "link_type": "DocType",
+	 "link_to": "Quality Procedure"},
+	{"type": "Link", "label": "Quality Goal", "link_type": "DocType", "link_to": "Quality Goal"},
+
+	# 9.3 and 8.7 — management review, and what is done about what it finds.
+	{"type": "Card Break", "label": "Review and action"},
+	{"type": "Link", "label": "Quality Review", "link_type": "DocType", "link_to": "Quality Review"},
+	{"type": "Link", "label": "Quality Meeting", "link_type": "DocType",
+	 "link_to": "Quality Meeting"},
+	{"type": "Link", "label": "Quality Action", "link_type": "DocType", "link_to": "Quality Action"},
+	{"type": "Link", "label": "Quality Feedback", "link_type": "DocType",
+	 "link_to": "Quality Feedback"},
+	{"type": "Link", "label": "Feedback Template", "link_type": "DocType",
+	 "link_to": "Quality Feedback Template"},
+
+	# 9.1.2 — the evidence, after the fact.
+	{"type": "Card Break", "label": "Reports"},
+	{"type": "Link", "label": "Quality Inspection Summary", "link_type": "Report",
+	 "link_to": "Quality Inspection Summary", "is_query_report": 1},
+	# ERPNext calls this one simply "Review". Labelled by what it reports on, because
+	# "Review" on its own says nothing next to Quality Review in the card above.
+	{"type": "Link", "label": "Actions Review", "link_type": "Report", "link_to": "Review",
+	 "is_query_report": 1},
+]
+
+QUALITY_CONTENT = [
+	{"id": "fuse_q_head", "type": "header",
+	 "data": {"text": '<span class="h4"><b>Quality</b></span>', "col": 12}},
+	{"id": "fuse_q_s1", "type": "shortcut", "data": {"shortcut_name": "Inspections", "col": 4}},
+	{"id": "fuse_q_s2", "type": "shortcut", "data": {"shortcut_name": "Rejected", "col": 4}},
+	{"id": "fuse_q_s3", "type": "shortcut", "data": {"shortcut_name": "Procedures", "col": 4}},
+	{"id": "fuse_q_c1", "type": "card", "data": {"card_name": "Inspection", "col": 3}},
+	{"id": "fuse_q_c2", "type": "card", "data": {"card_name": "Procedures and goals", "col": 3}},
+	{"id": "fuse_q_c3", "type": "card", "data": {"card_name": "Review and action", "col": 3}},
+	{"id": "fuse_q_c4", "type": "card", "data": {"card_name": "Reports", "col": 3}},
+]
+
 # The landing workspace. Its only job is to be the way in from the desk: one shortcut to
 # the Fuse Home page, which is where the real tiles live.
 #
@@ -238,6 +333,10 @@ def after_install():
 		sequence_id=0,
 	)
 	stock = _build(WORKSPACE, "Stock Control", "stock", CONTENT, SHORTCUTS, LINKS, sequence_id=1)
+	quality = _build(
+		QUALITY_WORKSPACE, "Quality", "check", QUALITY_CONTENT, QUALITY_SHORTCUTS,
+		QUALITY_LINKS, sequence_id=2,
+	)
 	_branding()
 	folder = _training_folder()
 	landed = _set_default_workspace()
@@ -246,6 +345,7 @@ def after_install():
 	return {
 		"landing": landing,
 		"workspace": stock,
+		"quality_workspace": quality,
 		"training_page": TRAINING_PAGE,
 		"logo": LOGO,
 		"training_folder": folder,

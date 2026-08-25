@@ -59,25 +59,13 @@ TILES = [
 		"requires_page": "fuse-receiving",
 		"roles": ["Stock Controller", "Stock User", "Stock Manager"],
 	},
-	{
-		# The specifications a batch is measured against. A master file in the same sense a
-		# BOM is: a recipe says what goes in, a template says what the result has to be.
-		# Both are set up once by the people who own the product, not touched during a shift.
-		#
-		# Its own key, but the Quality tile's switch — a client who does not inspect should
-		# not see either, and a second switch that always matched the first would be a
-		# setting nobody could answer. The key has to stay unique even so: two tiles
-		# sharing one made the second silently replace the first.
-		"key": "quality_templates",
-		"module": "quality",
-		"label": "Quality Templates",
-		"blurb": "The specification each product is measured against",
-		"icon": "📐",
-		"route": ["List", "Quality Inspection Template"],
-		"group": "reference",
-		"order": 99,
-		"roles": ["Manufacturing Manager", "Stock Manager", "Quality Manager"],
-	},
+	# There is no Quality Templates tile.
+	#
+	# It had one, on the reference row, back when the Quality tile opened the inspection
+	# list and templates were otherwise unreachable. The Quality workspace holds them now,
+	# in the Inspection card beside the inspections they are measured against — which is
+	# where someone setting up a specification would look for them anyway. A second route
+	# to one list is not worth a tile.
 	{
 		# Set apart on the reference row: a BOM is not something you DO, it is what the doing
 		# is based on. Quality sits beside it for the same reason — a specification is what a
@@ -136,16 +124,22 @@ TILES = [
 	},
 	{
 		# An action, and it sits where it happens in the day: a batch is made, it is checked,
-		# it goes out. The SPECIFICATION it is checked against is a master file and lives on
-		# the reference row — see the Quality Templates tile.
+		# it goes out.
+		#
+		# Opens the Quality workspace rather than the inspection list. Quality is bigger
+		# than one list — procedures, goals, reviews, corrective actions and the instrument
+		# register all belong to it, and a tile that landed on inspections made the rest
+		# look absent when it was only unlinked. The workspace leads with inspections, so
+		# the common case is still one click.
 		#
 		# Only appears where the client actually inspects something; the switch is off on a
 		# site that does not.
 		"key": "quality",
-		"label": "Quality Inspection",
-		"blurb": "Check a batch against its specification",
+		"label": "Quality",
+		"blurb": "Inspections, specifications, procedures and reviews",
 		"icon": "🔬",
-		"route": ["List", "Quality Inspection"],
+		# The workspace SLUG, for the reason spelled out on the Stock Control tile below.
+		"route": ["fuse-quality"],
 		"roles": ["Stock Controller", "Stock User", "Stock Manager", "Manufacturing User",
 		          "Manufacturing Manager", "Quality Manager"],
 	},
