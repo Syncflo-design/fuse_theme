@@ -205,13 +205,18 @@ def _all_tiles():
 	A contributor that raises is skipped. A missing tile is a poor outcome; a home page
 	that will not load because an optional app is half-installed is a worse one.
 	"""
-	tiles = list(TILES)
+	tiles = {tile["key"]: tile for tile in TILES}
 	for method in frappe.get_hooks("fuse_tiles") or []:
 		try:
-			tiles.extend(frappe.get_attr(method)() or [])
+			for tile in frappe.get_attr(method)() or []:
+				# A contributed tile REPLACES one of the same key. That is how an app whose
+				# own setting changes where a tile should go says so, without the theme
+				# having to know that the setting exists. Two tiles with one key would
+				# otherwise both render, which reads as a duplicate rather than a choice.
+				tiles[tile["key"]] = tile
 		except Exception:
 			continue
-	return tiles
+	return list(tiles.values())
 
 
 def _active_modules():
