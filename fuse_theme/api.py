@@ -95,7 +95,7 @@ TILES = [
 	{
 		"key": "works_orders",
 		"label": "Works Orders",
-		"blurb": "Current manufacturing and production orders",
+		"blurb": "Current production orders",
 		"icon": "🔧",
 		"route": ["List", "Work Order"],
 		"roles": ["Stock Controller", "Manufacturing User", "Manufacturing Manager"],
@@ -149,7 +149,7 @@ TILES = [
 		"key": "quality_setup",
 		"module": "quality",
 		"label": "Quality",
-		"blurb": "Specifications, instruments, procedures and reviews",
+		"blurb": "Specifications, instruments, procedures etc",
 		"icon": "📐",
 		# The workspace SLUG, for the reason spelled out on the Stock Control tile below.
 		"route": ["fuse-quality"],
