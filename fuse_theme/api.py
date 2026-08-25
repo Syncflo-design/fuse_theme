@@ -64,10 +64,12 @@ TILES = [
 		# BOM is: a recipe says what goes in, a template says what the result has to be.
 		# Both are set up once by the people who own the product, not touched during a shift.
 		#
-		# Same switch key as the Quality tile on purpose — a client who does not inspect
-		# should not see either, and a second switch that always matched the first would be
-		# a setting nobody could answer.
-		"key": "quality",
+		# Its own key, but the Quality tile's switch — a client who does not inspect should
+		# not see either, and a second switch that always matched the first would be a
+		# setting nobody could answer. The key has to stay unique even so: two tiles
+		# sharing one made the second silently replace the first.
+		"key": "quality_templates",
+		"module": "quality",
 		"label": "Quality Templates",
 		"blurb": "The specification each product is measured against",
 		"icon": "📐",
@@ -125,7 +127,7 @@ TILES = [
 		# the same form. One tile, and a scanner-shaped single-item screen can be added
 		# later if the shop floor wants one.
 		"key": "item_transfer",
-		"label": "Item Transfer",
+		"label": "Warehouse Transfer",
 		"blurb": "Move stock between warehouses",
 		"icon": "⇄",
 		"route": ["new", "Stock Entry"],
@@ -256,7 +258,9 @@ def get_home():
 		# Switched off by the client under Active Modules in Intacct Settings. Checked
 		# first because it is a decision someone made deliberately, where a role or a
 		# permission miss is usually an oversight.
-		if not active.get(tile["key"], True):
+		# The switch is usually the tile's own key, but not always: several tiles can belong
+		# to one module, and each still needs a key of its own to be replaceable.
+		if not active.get(tile.get("module", tile["key"]), True):
 			continue
 		# A tile that names no roles is for everyone — a contributed tile is not obliged
 		# to name any.
@@ -274,7 +278,9 @@ def get_home():
 		# site does not have, which is the truth.
 		if tile.get("requires_page") and not frappe.db.exists("Page", tile["requires_page"]):
 			continue
-		tiles.append({k: v for k, v in tile.items() if k not in ("roles", "requires_page")})
+		tiles.append(
+			{k: v for k, v in tile.items() if k not in ("roles", "requires_page", "module")}
+		)
 
 	return {
 		"tiles": tiles,
