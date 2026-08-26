@@ -291,7 +291,16 @@ def get_home():
 		)
 
 	return {
-		"tiles": tiles,
+		# Everything except the footer row, which is rendered separately below.
+		"tiles": [tile for tile in tiles if tile.get("group") != "footer"],
+		# Tiles an app has asked to sit on the bottom row, beside the shop floor link and
+		# the guides. That row is for the things that are not part of anybody's job —
+		# help, and how to ask for help — so it takes contributions rather than being two
+		# hard-coded cards for ever.
+		"extras": sorted(
+			(tile for tile in tiles if tile.get("group") == "footer"),
+			key=lambda tile: tile.get("order", 0),
+		),
 		# The shop-floor screens are NOT a tile. They live in fuse_manufacturing and
 		# their real entry point is the installed app, whose start_url opens them
 		# directly — an operator on a phone never sees this page at all. The footer

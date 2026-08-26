@@ -13,7 +13,7 @@
 //   4. CSS lives in its own file, linked from here, so this stays small.
 // ============================================================================
 
-const BUILD_MARKER = 'v0.7.1-2026-08-24-footer-row';
+const BUILD_MARKER = 'v0.8.0-2026-08-25-footer-extras';
 
 frappe.pages['fuse-home'].on_page_load = function (wrapper) {
 	const page = frappe.ui.make_app_page({
@@ -101,7 +101,7 @@ class FuseHome {
 				const data = (r && r.message) || {};
 				this.render_subtitle(data);
 				this.render_tiles(data.tiles || []);
-				this.render_footer(data.floor, data.training);
+				this.render_footer(data.floor, data.training, data.extras);
 			})
 			.catch((e) => this.render_error(e));
 	}
@@ -112,10 +112,11 @@ class FuseHome {
 	// smaller scale and without the green top rule, so it reads as related but
 	// subordinate rather than as a tile someone forgot to align. The real way in
 	// is the installed app; this is how you show it from a desk.
-	render_footer(floor, training) {
+	render_footer(floor, training, extras) {
 		const $footer = this.$root.find('[data-fuse="footer"]');
 		$footer.empty();
-		if ((!floor || !floor.route) && (!training || !training.route)) return;
+		extras = extras || [];
+		if ((!floor || !floor.route) && (!training || !training.route) && !extras.length) return;
 
 		// Inline SVG (Lucide "smartphone"), not an emoji: an emoji cannot take a
 		// colour from the stylesheet and renders differently on every platform.
@@ -170,6 +171,42 @@ class FuseHome {
 			$guides.on('click', () => frappe.set_route(training.route));
 			$footer.append($guides);
 		}
+
+		// Anything an app has asked to sit on this row. Same card again, so a contributed
+		// one is indistinguishable from the two above — the row is a row, not a place
+		// where the built-in cards look different from everybody else's.
+		extras.forEach((tile) => {
+			// A contributed tile may carry its own SVG path. Preferred over its emoji for
+			// the same reason the two above use one: an emoji cannot take a colour from
+			// the stylesheet and renders differently on every platform.
+			const mark = tile.svg
+				? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+				  'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ' +
+				  'focusable="false">' + tile.svg + '</svg>'
+				: '';
+
+			const $extra = $(
+				'<button type="button" class="fuse-home__floor">' +
+				'  <span class="fuse-home__floor-icon"></span>' +
+				'  <span class="fuse-home__floor-body">' +
+				'    <span class="fuse-home__floor-label"></span>' +
+				'    <span class="fuse-home__floor-blurb"></span>' +
+				'  </span>' +
+				'  <span class="fuse-home__floor-chevron">' + chevron + '</span>' +
+				'</button>'
+			);
+
+			// .text() for anything from the server, .html() only for the SVG we built here.
+			if (mark) {
+				$extra.find('.fuse-home__floor-icon').html(mark);
+			} else {
+				$extra.find('.fuse-home__floor-icon').text(tile.icon || '');
+			}
+			$extra.find('.fuse-home__floor-label').text(tile.label || '');
+			$extra.find('.fuse-home__floor-blurb').text(tile.blurb || '');
+			$extra.on('click', () => this.open(tile));
+			$footer.append($extra);
+		});
 	}
 
 	render_subtitle(data) {
