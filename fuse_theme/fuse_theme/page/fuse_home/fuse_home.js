@@ -13,7 +13,7 @@
 //   4. CSS lives in its own file, linked from here, so this stays small.
 // ============================================================================
 
-const BUILD_MARKER = 'v0.8.0-2026-08-25-footer-extras';
+const BUILD_MARKER = 'v0.8.1-2026-08-25-footer-extras';
 
 frappe.pages['fuse-home'].on_page_load = function (wrapper) {
 	const page = frappe.ui.make_app_page({
@@ -204,7 +204,10 @@ class FuseHome {
 			}
 			$extra.find('.fuse-home__floor-label').text(tile.label || '');
 			$extra.find('.fuse-home__floor-blurb').text(tile.blurb || '');
-			$extra.on('click', () => this.open(tile));
+			// go(), the same opener the tiles use — a footer card pointing at a new
+			// document needs frappe.new_doc() rather than set_route, and that logic
+			// belongs in one place.
+			$extra.on('click', () => this.go(tile));
 			$footer.append($extra);
 		});
 	}
