@@ -1,0 +1,209 @@
+{
+  "communities": {
+    "0": [
+      "fuse_theme_api",
+      "fuse_theme_api_active_modules",
+      "fuse_theme_api_all_tiles",
+      "fuse_theme_api_file_size",
+      "fuse_theme_api_get_home",
+      "fuse_theme_api_get_training_documents",
+      "fuse_theme_api_py_whitelist",
+      "fuse_theme_api_rationale_1",
+      "fuse_theme_api_rationale_208",
+      "fuse_theme_api_rationale_233",
+      "fuse_theme_api_rationale_255",
+      "fuse_theme_api_rationale_331",
+      "fuse_theme_api_rationale_351",
+      "fuse_theme_api_rationale_413",
+      "fuse_theme_api_readable",
+      "fuse_theme_api_setup",
+      "fuse_theme_api_shipped_guides"
+    ],
+    "1": [
+      "fuse_theme_fuse_theme_page_fuse_home_fuse_home",
+      "fuse_theme_fuse_theme_page_fuse_home_fuse_home_fusehome",
+      "fuse_theme_fuse_theme_page_fuse_home_fuse_home_fusehome_ask",
+      "fuse_theme_fuse_theme_page_fuse_home_fuse_home_fusehome_constructor",
+      "fuse_theme_fuse_theme_page_fuse_home_fuse_home_fusehome_go",
+      "fuse_theme_fuse_theme_page_fuse_home_fuse_home_fusehome_load_css",
+      "fuse_theme_fuse_theme_page_fuse_home_fuse_home_fusehome_refresh",
+      "fuse_theme_fuse_theme_page_fuse_home_fuse_home_fusehome_render_error",
+      "fuse_theme_fuse_theme_page_fuse_home_fuse_home_fusehome_render_footer",
+      "fuse_theme_fuse_theme_page_fuse_home_fuse_home_fusehome_render_shell",
+      "fuse_theme_fuse_theme_page_fuse_home_fuse_home_fusehome_render_subtitle",
+      "fuse_theme_fuse_theme_page_fuse_home_fuse_home_fusehome_render_tiles",
+      "fuse_theme_fuse_theme_page_fuse_home_fuse_home_fusehome_start_clock"
+    ],
+    "2": [
+      "fuse_theme_install",
+      "fuse_theme_install_after_install",
+      "fuse_theme_install_branding",
+      "fuse_theme_install_build",
+      "fuse_theme_install_py_whitelist",
+      "fuse_theme_install_rationale_1",
+      "fuse_theme_install_rationale_228",
+      "fuse_theme_install_rationale_242",
+      "fuse_theme_install_rationale_258",
+      "fuse_theme_install_rationale_307",
+      "fuse_theme_install_rationale_330",
+      "fuse_theme_install_set_default_workspace",
+      "fuse_theme_install_training_folder"
+    ],
+    "3": [
+      "fuse_theme_public_manifest",
+      "fuse_theme_public_manifest_background_color",
+      "fuse_theme_public_manifest_description",
+      "fuse_theme_public_manifest_display",
+      "fuse_theme_public_manifest_icons",
+      "fuse_theme_public_manifest_name",
+      "fuse_theme_public_manifest_orientation",
+      "fuse_theme_public_manifest_scope",
+      "fuse_theme_public_manifest_short_name",
+      "fuse_theme_public_manifest_start_url",
+      "fuse_theme_public_manifest_theme_color"
+    ],
+    "4": [
+      "fuse_theme_public_js_fuse_theme_bundle",
+      "fuse_theme_public_js_fuse_theme_bundle_at_desk_root",
+      "fuse_theme_public_js_fuse_theme_bundle_build_button",
+      "fuse_theme_public_js_fuse_theme_bundle_desk_roots",
+      "fuse_theme_public_js_fuse_theme_bundle_go_home_if_at_root",
+      "fuse_theme_public_js_fuse_theme_bundle_head_link",
+      "fuse_theme_public_js_fuse_theme_bundle_insert_button",
+      "fuse_theme_public_js_fuse_theme_bundle_install_pwa_head",
+      "fuse_theme_public_js_fuse_theme_bundle_start"
+    ],
+    "5": [
+      "fuse_theme_fuse_theme_page_fuse_training_fuse_training",
+      "fuse_theme_fuse_theme_page_fuse_training_fuse_training_fusetraining",
+      "fuse_theme_fuse_theme_page_fuse_training_fuse_training_fusetraining_constructor",
+      "fuse_theme_fuse_theme_page_fuse_training_fuse_training_fusetraining_load",
+      "fuse_theme_fuse_theme_page_fuse_training_fuse_training_fusetraining_render",
+      "fuse_theme_fuse_theme_page_fuse_training_fuse_training_fusetraining_render_error",
+      "fuse_theme_fuse_theme_page_fuse_training_fuse_training_fusetraining_render_shell",
+      "fuse_theme_fuse_theme_page_fuse_training_fuse_training_fusetraining_render_upload"
+    ],
+    "6": [
+      "fuse_theme_fuse_theme_doctype_init"
+    ],
+    "7": [
+      "fuse_theme_fuse_theme_init"
+    ],
+    "8": [
+      "fuse_theme_fuse_theme_page_fuse_home_init"
+    ],
+    "9": [
+      "fuse_theme_fuse_theme_page_fuse_training_init"
+    ],
+    "10": [
+      "fuse_theme_fuse_theme_page_init"
+    ],
+    "11": [
+      "fuse_theme_hooks"
+    ],
+    "12": [
+      "fuse_theme_init"
+    ],
+    "13": [
+      "pkg_fuse_theme"
+    ]
+  },
+  "cohesion": {
+    "0": 0.16911764705882354,
+    "1": 0.3076923076923077,
+    "2": 0.20512820512820512,
+    "3": 0.18181818181818182,
+    "4": 0.3611111111111111,
+    "5": 0.4642857142857143,
+    "6": 1.0,
+    "7": 1.0,
+    "8": 1.0,
+    "9": 1.0,
+    "10": 1.0,
+    "11": 1.0,
+    "12": 1.0,
+    "13": 1.0
+  },
+  "gods": [
+    {
+      "id": "fuse_theme_fuse_theme_page_fuse_home_fuse_home_fusehome",
+      "label": "FuseHome",
+      "degree": 12
+    },
+    {
+      "id": "fuse_theme_install_after_install",
+      "label": "after_install()",
+      "degree": 9
+    },
+    {
+      "id": "fuse_theme_fuse_theme_page_fuse_training_fuse_training_fusetraining",
+      "label": "FuseTraining",
+      "degree": 7
+    },
+    {
+      "id": "fuse_theme_api_get_training_documents",
+      "label": "get_training_documents()",
+      "degree": 6
+    },
+    {
+      "id": "fuse_theme_api_get_home",
+      "label": "get_home()",
+      "degree": 5
+    },
+    {
+      "id": "fuse_theme_api_setup",
+      "label": "setup()",
+      "degree": 4
+    },
+    {
+      "id": "fuse_theme_api_all_tiles",
+      "label": "_all_tiles()",
+      "degree": 3
+    },
+    {
+      "id": "fuse_theme_api_active_modules",
+      "label": "_active_modules()",
+      "degree": 3
+    },
+    {
+      "id": "fuse_theme_api_shipped_guides",
+      "label": "_shipped_guides()",
+      "degree": 3
+    },
+    {
+      "id": "fuse_theme_install_branding",
+      "label": "_branding()",
+      "degree": 3
+    }
+  ],
+  "surprises": [
+    {
+      "source": "setup()",
+      "target": "after_install()",
+      "source_files": [
+        "fuse_theme/api.py",
+        "fuse_theme/install.py"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `after_install()` connect `after_install` to `api.py`?",
+      "why": "High betweenness centrality (0.079) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `setup()` connect `api.py` to `after_install`?",
+      "why": "High betweenness centrality (0.014) - this node is a cross-community bridge."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `DESK_ROOTS`, `name`, `short_name` to the rest of the system?",
+      "why": "12 weakly-connected nodes found - possible documentation gaps or missing edges."
+    }
+  ]
+}

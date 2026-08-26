@@ -177,6 +177,16 @@
 	color: var(--fh-muted);
 	margin-top: 3px;
 	line-height: 1.4;
+	/* Two lines, always. Grid rows stretch to their tallest card, so one blurb that ran to
+	   three lines made every card in that row taller — the whole row paid for one tile's
+	   wording. Reserving the space keeps the rows level whatever an app contributes, and
+	   the clamp stops a long one pushing past it. */
+	min-height: 2.8em;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	line-clamp: 2;
+	overflow: hidden;
 }
 
 .fuse-tile__chevron {

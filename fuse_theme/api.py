@@ -103,7 +103,10 @@ TILES = [
 	{
 		"key": "wip_issue",
 		"label": "Issue to WIP",
-		"blurb": "Move components into a work-in-progress warehouse",
+		# "WIP" rather than "work-in-progress": the tile is already called Issue to WIP, so
+		# the term is established by the time anyone reads this, and spelling it out was the
+		# one blurb long enough to run to three lines and pull the whole row taller.
+		"blurb": "Move components into a WIP warehouse",
 		"icon": "🏭",
 		"route": ["new", "Stock Entry"],
 		"options": {"stock_entry_type": WIP_ISSUE},
