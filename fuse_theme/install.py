@@ -64,6 +64,14 @@ LINKS = [
 	# them. This shows what is still coming, where it is going and when it was due.
 	{"type": "Link", "label": "Stock on Order", "link_type": "Report",
 	 "link_to": "Stock on Order", "is_query_report": 1},
+	# Planning, from fuse_manufacturing 0.10: the customer order book by item, and the
+	# same book netted against stock and exploded through the BOMs into what to make and
+	# what to buy. A workspace link to a report that is not installed renders as a dead
+	# entry, which is why these ship in the theme only alongside that release.
+	{"type": "Link", "label": "Outstanding Orders", "link_type": "Report",
+	 "link_to": "Outstanding Orders", "is_query_report": 1},
+	{"type": "Link", "label": "Item Demand", "link_type": "Report",
+	 "link_to": "Item Demand", "is_query_report": 1},
 	# The ones asked at month end or when something looks wrong, kept apart from the daily
 	# four so the first card stays scannable.
 	{"type": "Card Break", "label": "Analysis"},
