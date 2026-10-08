@@ -229,6 +229,14 @@ def _all_tiles():
 				tiles[tile["key"]] = tile
 		except Exception:
 			continue
+
+	# Tiles one site needs and no other should ship with — the demo site's Demo Pack, say.
+	# Read from site config, so adding one is a config edit on that site, never a release.
+	# Same shape and same filters as the rest; an entry without a key or a route is skipped
+	# rather than allowed to break the page.
+	for tile in frappe.conf.get("fuse_site_tiles") or []:
+		if isinstance(tile, dict) and tile.get("key") and isinstance(tile.get("route"), list):
+			tiles[tile["key"]] = tile
 	return list(tiles.values())
 
 
