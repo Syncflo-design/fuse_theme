@@ -358,7 +358,7 @@ def _shipped_guides():
 
 
 @frappe.whitelist()
-def get_training_documents():
+def get_training_documents(folder=None):
 	"""The guides: what the installed apps ship, plus whatever this site has uploaded.
 
 	Shipped guides mean a new instance is never installed without help. Uploads are read
@@ -370,7 +370,13 @@ def get_training_documents():
 
 	A document nobody can open is worse than no document, so private files are excluded
 	rather than listed and then refused.
+
+	With `folder`, the page lists that one folder under Home instead — a site's own set of
+	documents, such as the demo site's Demo Pack — and none of the shipped guides.
 	"""
+	if folder:
+		return _folder_documents(folder)
+
 	files = frappe.get_all(
 		"File",
 		filters={"folder": TRAINING_FOLDER, "is_folder": 0, "is_private": 0},
@@ -398,6 +404,39 @@ def get_training_documents():
 	return {
 		"documents": sorted(by_title.values(), key=lambda d: d["title"].lower()),
 		"folder": TRAINING_FOLDER,
+		"can_upload": frappe.has_permission("File", "create"),
+	}
+
+
+def _folder_documents(folder):
+	"""One folder under Home, in the shape the guides page paints.
+
+	Read through get_list, not get_all, so the user's own File permissions decide what is
+	listed. That is what lets private documents in safely: a private file appears for
+	whoever may open it — its owner, or anyone who can read the record it is attached
+	to — and for nobody else.
+	"""
+	path = "Home/" + str(folder).strip("/")
+	files = frappe.get_list(
+		"File",
+		filters={"folder": path, "is_folder": 0},
+		fields=["file_name", "file_url", "file_size", "modified"],
+		order_by="file_name asc",
+	)
+	return {
+		"documents": [
+			{
+				"title": _readable(f.file_name or ""),
+				"url": f.file_url,
+				"is_pdf": (f.file_name or "").lower().endswith(".pdf"),
+				"size": _file_size(f.file_size),
+				"updated": frappe.utils.format_date(f.modified, "d MMM yyyy"),
+				"shipped": False,
+			}
+			for f in files
+		],
+		"folder": path,
+		"title": path.rsplit("/", 1)[-1],
 		"can_upload": frappe.has_permission("File", "create"),
 	}
 
