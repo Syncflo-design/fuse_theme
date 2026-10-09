@@ -52,6 +52,20 @@ TILES = [
 		"requires_app": "crm",
 		"roles": ["Sales User", "Sales Manager", "System Manager"],
 	},
+	# People, with Frappe HR installed: the employee list, not Frappe HR's own app entry,
+	# which opens its setup page rather than anything used day to day.
+	{
+		"key": "hr_people",
+		"module": "hr",
+		"label": "People",
+		"blurb": "Employees, trades and labour brokers",
+		"icon": "👥",
+		"svg": '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle>'
+		'<path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>',
+		"route": ["List", "Employee"],
+		"requires_app": "hrms",
+		"roles": ["HR User", "HR Manager", "System Manager"],
+	},
 	{
 		# On the second row with BOMs and Projects rather than in the run of actions: this
 		# states what is needed, it does not move anything. The moving is Receiving's job,
