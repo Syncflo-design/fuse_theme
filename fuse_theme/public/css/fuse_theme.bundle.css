@@ -825,44 +825,50 @@ header.navbar {
 /* ==============================================================================
    12. FUSE HOME BUTTON — the way back, from anywhere
    ==============================================================================
-   The desk's own home button lands on the workspace grid, which does not carry
-   Fuse. This is the theme's own button, injected into the navbar, so it behaves
-   the same on every site regardless of what the desk considers home.
+   The desk's own way home is three clicks deep. This is a house beside the title
+   of every page, on the page's own header, one click from anywhere.
    ============================================================================== */
 
-.fuse-home-nav-item {
+/* Only headers carrying the button are made flex, so a page that styles its own
+   title is left exactly as it was. */
+.page-head .page-title:has(> .fuse-home-glyph) {
 	display: flex;
 	align-items: center;
 }
 
-.fuse-home-button {
+.fuse-home-glyph {
 	display: inline-flex;
+	flex: 0 0 auto;
 	align-items: center;
 	justify-content: center;
-	width: 28px;
-	height: 28px;
-	margin-right: 12px;
+	width: 32px;
+	height: 32px;
+	margin-right: 10px;
 	border-radius: 8px;
-	/* White on the green navbar, so it reads as part of the bar rather than a
-	   control dropped onto it. */
-	background: rgba(255, 255, 255, 0.16);
-	color: #FFFFFF;
-	font-weight: 700;
-	font-size: 14px;
-	line-height: 1;
+	/* White on the green-tinted header, so it reads as a button, not decoration. */
+	background: #FFFFFF;
+	border: 1px solid var(--fuse-green-tint-2);
+	box-shadow: var(--fuse-e1);
+	color: var(--fuse-green);
 	text-decoration: none;
-	transition: background 120ms ease;
+	transition: background 120ms ease, color 120ms ease;
 }
 
-.fuse-home-button:hover,
-.fuse-home-button:focus {
-	background: rgba(255, 255, 255, 0.30);
+.fuse-home-glyph svg {
+	width: 18px;
+	height: 18px;
+}
+
+.fuse-home-glyph:hover,
+.fuse-home-glyph:focus {
+	background: var(--fuse-green);
+	border-color: var(--fuse-green);
 	color: #FFFFFF;
 	text-decoration: none;
 }
 
-.fuse-home-button:focus-visible {
-	outline: 2px solid #FFFFFF;
+.fuse-home-glyph:focus-visible {
+	outline: 2px solid var(--fuse-green);
 	outline-offset: 2px;
 }
 

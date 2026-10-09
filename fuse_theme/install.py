@@ -212,7 +212,7 @@ LANDING_SHORTCUTS = [
 
 LANDING_CONTENT = [
 	{"id": "fuse_land_head", "type": "header",
-	 "data": {"text": '<span class="h4"><b>Fuse Manufacturing</b></span>', "col": 12}},
+	 "data": {"text": '<span class="h4"><b>Fuse</b></span>', "col": 12}},
 	{"id": "fuse_land_s1", "type": "shortcut", "data": {"shortcut_name": "Fuse Home", "col": 4}},
 ]
 

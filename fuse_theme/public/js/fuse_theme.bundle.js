@@ -1,20 +1,28 @@
-// A permanent way back to Fuse Home from anywhere in the desk.
+// A permanent way back to Fuse Home from anywhere in the desk: a house beside the title
+// of every page.
 //
-// The desk's own home button goes to whatever Frappe considers home, which on this stack
-// is an apps grid that does not list Fuse. Rather than fight that, the theme puts its own
-// button in the navbar. It is ours, so it works the same on every site and every version.
+// The desk's own way home is three clicks deep (workspace menu → Apps → Fuse), and v16
+// has no top navbar to hang a button on — its header also swallows clicks on controls
+// injected into it. Every desk page still draws its own header, so the button goes there.
 
 const FUSE_HOME_ROUTE = '/desk/fuse-home';
-const BUTTON_ID = 'fuse-home-button';
+const BUTTON_CLASS = 'fuse-home-glyph';
+
+// Lucide "house", inline: no icon font to load and nothing to go stale.
+const HOUSE_SVG =
+	'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+	'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+	'<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>' +
+	'<path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>' +
+	'</svg>';
 
 function build_button() {
 	const link = document.createElement('a');
-	link.id = BUTTON_ID;
-	link.className = 'fuse-home-button';
+	link.className = BUTTON_CLASS;
 	link.href = FUSE_HOME_ROUTE;
 	link.title = 'Fuse Home';
 	link.setAttribute('aria-label', 'Fuse Home');
-	link.textContent = 'F';
+	link.innerHTML = HOUSE_SVG;
 
 	// Routed in-app rather than reloading the page, but only on a plain left click —
 	// ctrl/cmd/middle click must still open a new tab like any other link.
@@ -29,28 +37,33 @@ function build_button() {
 	return link;
 }
 
-function insert_button() {
-	if (document.getElementById(BUTTON_ID)) {
-		return true;
-	}
+// Every page keeps its own header in the DOM, so rather than work out which one is on
+// screen, every header that lacks the button gets one. Fuse Home itself is skipped.
+function insert_buttons() {
+	document.querySelectorAll('.page-head .page-title').forEach((title) => {
+		if (title.querySelector('.' + BUTTON_CLASS)) {
+			return;
+		}
+		if (title.closest('#page-fuse-home, [data-page-route="fuse-home"]')) {
+			return;
+		}
+		const anchor = title.querySelector(':scope > .title-area');
+		title.insertBefore(build_button(), anchor || title.firstChild);
+	});
+}
 
-	// The navbar markup differs between versions, so try the known containers in order
-	// rather than depending on one selector surviving an upgrade.
-	const host =
-		document.querySelector('.navbar .navbar-collapse .navbar-nav.ml-auto') ||
-		document.querySelector('.navbar .navbar-nav.ml-auto') ||
-		document.querySelector('header .navbar-nav') ||
-		document.querySelector('.navbar-nav');
-
-	if (!host) {
-		return false;
-	}
-
-	const item = document.createElement('li');
-	item.className = 'nav-item fuse-home-nav-item';
-	item.appendChild(build_button());
-	host.insertBefore(item, host.firstChild);
-	return true;
+// A page's header is drawn after its route has changed, sometimes after a server round
+// trip for the doctype, so keep looking for a couple of seconds after each navigation.
+function place_buttons() {
+	insert_buttons();
+	let attempts = 0;
+	const timer = setInterval(() => {
+		attempts += 1;
+		insert_buttons();
+		if (attempts >= 15) {
+			clearInterval(timer);
+		}
+	}, 200);
 }
 
 // The desk root — whatever the user types, and where the home button goes. On v16 /app
@@ -84,20 +97,7 @@ function go_home_if_at_root() {
 
 function start() {
 	go_home_if_at_root();
-
-	if (insert_button()) {
-		return;
-	}
-
-	// The navbar is rendered after boot, and on a slow first load that can be a second or
-	// two. Give up after 20 tries rather than observing forever.
-	let attempts = 0;
-	const timer = setInterval(() => {
-		attempts += 1;
-		if (insert_button() || attempts > 20) {
-			clearInterval(timer);
-		}
-	}, 250);
+	place_buttons();
 }
 
 if (document.readyState === 'loading') {
@@ -106,11 +106,11 @@ if (document.readyState === 'loading') {
 	start();
 }
 
-// Single-page navigation replaces parts of the shell, so re-assert the button after each
-// route change. insert_button() is a no-op when it is already there.
+// Single-page navigation draws a new page's header without a page load, so look again
+// after each route change. A header that already has the button is left alone.
 if (window.frappe && frappe.router && frappe.router.on) {
 	frappe.router.on('change', () => {
-		insert_button();
+		place_buttons();
 		// Also covers the home button, which routes to the desk root in-app without a
 		// page load — so the check has to run on every route change, not just at boot.
 		go_home_if_at_root();

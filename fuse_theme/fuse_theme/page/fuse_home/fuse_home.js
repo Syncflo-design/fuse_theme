@@ -58,7 +58,7 @@ class FuseHome {
 			'<div class="fuse-home__banner">',
 			'  <img class="fuse-home__mark" src="/assets/fuse_theme/images/fuse-icon.png" alt="Fuse">',
 			'  <div class="fuse-home__titles">',
-			'    <div class="fuse-home__title">Fuse Manufacturing</div>',
+			'    <div class="fuse-home__title">Fuse</div>',
 			'    <div class="fuse-home__subtitle" data-fuse="subtitle">Loading...</div>',
 			'  </div>',
 			'  <div class="fuse-home__clock">',
