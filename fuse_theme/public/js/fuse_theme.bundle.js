@@ -1,11 +1,12 @@
-// A permanent way back to Fuse Home from anywhere in the desk: a house beside the title
-// of every page.
+// A permanent way home from anywhere in the desk: a house beside the title of every page.
+//
+// Home is Fuse Home, or the user's own industry desk page when their default workspace
+// points at one (Construction, say) — the theme's boot data says which (see boot.py).
 //
 // The desk's own way home is three clicks deep (workspace menu → Apps → Fuse), and v16
 // has no top navbar to hang a button on — its header also swallows clicks on controls
 // injected into it. Every desk page still draws its own header, so the button goes there.
 
-const FUSE_HOME_ROUTE = '/desk/fuse-home';
 const BUTTON_CLASS = 'fuse-home-glyph';
 
 // Lucide "house", inline: no icon font to load and nothing to go stale.
@@ -16,12 +17,28 @@ const HOUSE_SVG =
 	'<path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>' +
 	'</svg>';
 
+function fuse_desk() {
+	return (window.frappe && frappe.boot && frappe.boot.fuse_desk) || {};
+}
+
+// The route of the user's home: their desk page's slug, or Fuse Home.
+function home_route() {
+	const name = fuse_desk().home;
+	if (!name) {
+		return 'fuse-home';
+	}
+	if (frappe.router && frappe.router.slug) {
+		return frappe.router.slug(name);
+	}
+	return name.toLowerCase().replace(/ /g, '-');
+}
+
 function build_button() {
 	const link = document.createElement('a');
 	link.className = BUTTON_CLASS;
-	link.href = FUSE_HOME_ROUTE;
-	link.title = 'Fuse Home';
-	link.setAttribute('aria-label', 'Fuse Home');
+	link.href = '/desk/' + home_route();
+	link.title = 'Home';
+	link.setAttribute('aria-label', 'Home');
 	link.innerHTML = HOUSE_SVG;
 
 	// Routed in-app rather than reloading the page, but only on a plain left click —
@@ -31,7 +48,7 @@ function build_button() {
 			return;
 		}
 		event.preventDefault();
-		frappe.set_route('fuse-home');
+		frappe.set_route(home_route());
 	});
 
 	return link;
@@ -52,22 +69,83 @@ function insert_buttons() {
 	});
 }
 
-// A page's header is drawn after its route has changed, sometimes after a server round
-// trip for the doctype, so keep looking for a couple of seconds after each navigation.
-function place_buttons() {
+// ---------------------------------------------------------------------------
+// Desk pages drawn as Fuse tiles.
+//
+// An industry app's workspace is its users' desk. Frappe draws its shortcuts as bare
+// labels with a count; the app says, per shortcut label, which icon and which line of
+// description to add (boot data, from its fuse_desk_tiles hook), and they are added here.
+// Additive only: the shortcut, its count and its click stay Frappe's own, so an admin
+// can still edit the workspace, and a shortcut nobody described is left as it was.
+// ---------------------------------------------------------------------------
+
+const TILE_CLASS = 'fuse-desk-tile';
+
+function decorate_desk() {
+	const route = (frappe.get_route && frappe.get_route()) || [];
+	const tiles = route[0] === 'Workspaces' ? (fuse_desk().tiles || {})[route[1]] : null;
+
+	// Scopes the desk-page styling (link cards and all) to the pages that asked for it.
+	document.body.classList.toggle('fuse-desk', Boolean(tiles));
+	if (!tiles) {
+		return;
+	}
+
+	document.querySelectorAll('.widget.shortcut-widget-box').forEach((widget) => {
+		if (widget.classList.contains(TILE_CLASS)) {
+			return;
+		}
+		const tile = tiles[widget.getAttribute('aria-label')];
+		if (!tile) {
+			return;
+		}
+		widget.classList.add(TILE_CLASS);
+
+		const head = widget.querySelector('.widget-head');
+		const label = widget.querySelector('.widget-label');
+		if (tile.svg && head && label) {
+			const icon = document.createElement('span');
+			icon.className = 'fuse-desk-tile__icon';
+			// The path comes from app code via boot, never from a user.
+			icon.innerHTML =
+				'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+				'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
+				tile.svg +
+				'</svg>';
+			head.insertBefore(icon, label);
+		}
+
+		const subtitle = widget.querySelector('.widget-subtitle');
+		if (tile.blurb && subtitle) {
+			subtitle.textContent = tile.blurb;
+		}
+	});
+}
+
+// ---------------------------------------------------------------------------
+// After every navigation.
+//
+// A page's header and a workspace's widgets are drawn after the route has changed —
+// a workspace only once its content has come back from the server — so keep looking for
+// a few seconds. Both steps leave alone anything they have already done.
+// ---------------------------------------------------------------------------
+
+function after_navigation() {
 	insert_buttons();
+	decorate_desk();
 	let attempts = 0;
 	const timer = setInterval(() => {
 		attempts += 1;
 		insert_buttons();
-		if (attempts >= 15) {
+		decorate_desk();
+		if (attempts >= 25) {
 			clearInterval(timer);
 		}
 	}, 200);
 }
 
-// The desk root — whatever the user types, and where the home button goes. On v16 /app
-// redirects here too, so both are covered.
+// The desk root — whatever the user types, and where Frappe's own home button goes. On
+// v16 /app redirects here too, so both are covered.
 // /desk/fuse is the landing workspace, which exists only to hold a shortcut to Fuse Home.
 // Users land there because default_workspace can point at a Workspace but not at a Page,
 // so login sends them one step short of where they are meant to be.
@@ -83,21 +161,21 @@ function go_home_if_at_root() {
 		return;
 	}
 
-	// Landing on the desk root shows a workspace grid that does not carry Fuse, and the
-	// home button always goes there. Rather than try to change what Frappe considers
-	// home — which on this stack is not settable to a Page — the theme claims the root.
+	// Landing on the desk root shows a workspace grid that does not carry Fuse. Rather
+	// than try to change what Frappe considers home — which on this stack is not settable
+	// to a Page — the theme claims the root and sends the user to their own home.
 	if (window.frappe && frappe.set_route) {
-		frappe.set_route('fuse-home');
+		frappe.set_route(home_route());
 	} else {
 		// replace() rather than assign(), so the grid never enters history and Back does
 		// not bounce the user straight back into it.
-		window.location.replace('/desk/fuse-home');
+		window.location.replace('/desk/' + home_route());
 	}
 }
 
 function start() {
 	go_home_if_at_root();
-	place_buttons();
+	after_navigation();
 }
 
 if (document.readyState === 'loading') {
@@ -106,13 +184,13 @@ if (document.readyState === 'loading') {
 	start();
 }
 
-// Single-page navigation draws a new page's header without a page load, so look again
-// after each route change. A header that already has the button is left alone.
+// Single-page navigation draws the next page without a page load, so look again after
+// each route change.
 if (window.frappe && frappe.router && frappe.router.on) {
 	frappe.router.on('change', () => {
-		place_buttons();
-		// Also covers the home button, which routes to the desk root in-app without a
-		// page load — so the check has to run on every route change, not just at boot.
+		after_navigation();
+		// Also covers Frappe's own home button, which routes to the desk root in-app
+		// without a page load — so the check has to run on every route change.
 		go_home_if_at_root();
 	});
 }

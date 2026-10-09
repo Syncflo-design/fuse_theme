@@ -18,6 +18,10 @@ web_include_css = "/assets/fuse_theme/css/fuse_web.css"
 after_install = "fuse_theme.install.after_install"
 after_migrate = "fuse_theme.install.after_install"
 
+# The user's home (Fuse Home, or their industry's own desk page) and how each app's desk
+# shortcuts are drawn, so the desk has both before it paints. See boot.py.
+extend_bootinfo = "fuse_theme.boot.extend"
+
 # The v16 desk home is an apps screen, not a workspace list — ERPNext registers Accounting,
 # Selling, Stock and the rest there the same way. Without an entry here Fuse is reachable
 # only by URL or the workspace sidebar, and the home button always lands somewhere else.

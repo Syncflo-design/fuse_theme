@@ -872,6 +872,126 @@ header.navbar {
 	outline-offset: 2px;
 }
 
+
+/* ==============================================================================
+   12b. DESK PAGES — an industry's workspace, drawn as Fuse tiles
+   ==============================================================================
+   An app's workspace is its users' desk. The theme's JS adds an icon chip and a
+   line of description to each shortcut the app described (.fuse-desk-tile), and
+   marks the body (.fuse-desk) while such a page is open. The tile matches a Fuse
+   Home tile: green top edge, tinted icon chip, title, two-line blurb. Frappe's
+   own count pill stays on the right — it is what is waiting.
+   ============================================================================== */
+
+.widget.shortcut-widget-box.fuse-desk-tile {
+	padding: 12px 14px;
+	min-height: 84px;
+	border-top: 3px solid var(--fuse-green);
+	cursor: pointer;
+}
+
+.fuse-desk-tile .widget-head {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+}
+
+.fuse-desk-tile__icon {
+	flex: 0 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 34px;
+	height: 34px;
+	border-radius: var(--fuse-r);
+	background: var(--fuse-green-tint);
+	color: var(--fuse-green-dark);
+	transition: background var(--fuse-t), color var(--fuse-t);
+}
+
+.fuse-desk-tile__icon svg {
+	width: 18px;
+	height: 18px;
+}
+
+.fuse-desk-tile .widget-label {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.fuse-desk-tile .widget-title {
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--fuse-ink);
+	line-height: 1.3;
+}
+
+/* Two lines, always, so a row of tiles stays level whatever each one says. */
+.fuse-desk-tile .widget-subtitle {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	line-clamp: 2;
+	overflow: hidden;
+	min-height: 2.7em;
+	margin-top: 2px;
+	font-size: 12px;
+	line-height: 1.35;
+	color: var(--fuse-muted);
+	white-space: normal;
+}
+
+.fuse-desk-tile .widget-control {
+	flex: 0 0 auto;
+	align-self: flex-start;
+}
+
+.widget.shortcut-widget-box.fuse-desk-tile:hover .fuse-desk-tile__icon {
+	background: var(--fuse-green);
+	color: #FFFFFF;
+}
+
+.widget.shortcut-widget-box.fuse-desk-tile:focus-visible {
+	outline: 2px solid var(--fuse-green);
+	outline-offset: 2px;
+}
+
+/* The link cards under the tiles: the full menu. Quieter than the tiles, with a
+   clear target on hover so a long list still reads as clickable. */
+.fuse-desk .widget.links-widget-box {
+	border-top: 3px solid var(--fuse-green-tint-2);
+}
+
+.fuse-desk .widget.links-widget-box .widget-title {
+	font-size: 13px;
+	font-weight: 650;
+	color: var(--fuse-ink-2);
+}
+
+.fuse-desk .widget.links-widget-box .link-item {
+	border-radius: var(--fuse-r-sm);
+	color: var(--fuse-ink-2);
+	transition: background var(--fuse-t), color var(--fuse-t);
+}
+
+.fuse-desk .widget.links-widget-box .link-item:hover {
+	background: var(--fuse-green-tint);
+	color: var(--fuse-green-dark);
+	text-decoration: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.widget.shortcut-widget-box.fuse-desk-tile,
+	.fuse-desk-tile__icon,
+	.fuse-desk .widget.links-widget-box .link-item {
+		transition: none;
+	}
+
+	.widget.shortcut-widget-box.fuse-desk-tile:hover {
+		transform: none;
+	}
+}
+
 /* ==============================================================================
    TRAINING & HELP — the guides, listed
    ==============================================================================
