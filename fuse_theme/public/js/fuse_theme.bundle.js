@@ -119,7 +119,26 @@ function decorate_desk() {
 		if (tile.blurb && subtitle) {
 			subtitle.textContent = tile.blurb;
 		}
+
+		// Frappe fills the count in after a server call, and again whenever the workspace
+		// refreshes, so watch for it rather than read it once.
+		const control = widget.querySelector('.widget-control');
+		if (control) {
+			mark_quiet(widget, control);
+			new MutationObserver(() => mark_quiet(widget, control)).observe(control, {
+				childList: true,
+				subtree: true,
+				characterData: true,
+			});
+		}
 	});
+}
+
+// A tile with nothing waiting shows no count at all: "0 to sign" on a desk is noise, and
+// the tile itself is the link, so the arrow beside the count goes too (CSS).
+function mark_quiet(widget, control) {
+	const text = control.textContent.trim();
+	widget.classList.toggle('fuse-desk-tile--quiet', text === '' || /^0(\s|$)/.test(text));
 }
 
 // ---------------------------------------------------------------------------
@@ -173,8 +192,27 @@ function go_home_if_at_root() {
 	}
 }
 
+// Straight after logging in, Frappe sends the user to the route of an app on its apps
+// screen — Fuse's is Fuse Home — never to a workspace. A user whose home is their own desk
+// page is sent on there, on that first load only: opening Fuse Home later is a choice.
+function go_home_after_login() {
+	if (!fuse_desk().home) {
+		return;
+	}
+	let from = '';
+	try {
+		from = new URL(document.referrer).pathname.replace(/\/+$/, '');
+	} catch (e) {
+		return;
+	}
+	if (from === '/login' && /\/fuse-home\/?$/.test(window.location.pathname)) {
+		frappe.set_route(home_route());
+	}
+}
+
 function start() {
 	go_home_if_at_root();
+	go_home_after_login();
 	after_navigation();
 }
 

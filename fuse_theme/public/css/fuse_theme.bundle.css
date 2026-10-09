@@ -883,17 +883,23 @@ header.navbar {
    own count pill stays on the right — it is what is waiting.
    ============================================================================== */
 
+/* Tall enough for icon, title, two lines and a count, so every row is level whether or
+   not its tiles have something waiting. */
 .widget.shortcut-widget-box.fuse-desk-tile {
 	padding: 12px 14px;
-	min-height: 84px;
+	min-height: 112px;
 	border-top: 3px solid var(--fuse-green);
 	cursor: pointer;
 }
 
+/* Icon and text on the first line; the count, when there is one, on a line of its own
+   beneath the text. Beside the title it squeezed the title to nothing. */
 .fuse-desk-tile .widget-head {
 	display: flex;
+	flex-wrap: wrap;
 	align-items: flex-start;
-	gap: 12px;
+	column-gap: 12px;
+	row-gap: 8px;
 }
 
 .fuse-desk-tile__icon {
@@ -915,8 +921,9 @@ header.navbar {
 }
 
 .fuse-desk-tile .widget-label {
-	flex: 1 1 auto;
+	flex: 1 1 0;
 	min-width: 0;
+	max-width: none;
 }
 
 .fuse-desk-tile .widget-title {
@@ -942,8 +949,23 @@ header.navbar {
 }
 
 .fuse-desk-tile .widget-control {
-	flex: 0 0 auto;
-	align-self: flex-start;
+	flex: 0 0 100%;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	margin: 0;
+	/* The icon's 34px and the 12px gap, so the count lines up under the title. */
+	padding-left: 46px;
+}
+
+/* The tile is the link; Frappe's arrow beside the count says nothing more. */
+.fuse-desk-tile .widget-control > svg {
+	display: none;
+}
+
+/* Nothing waiting: no count. Marked by the theme's JS as Frappe fills the count in. */
+.fuse-desk-tile.fuse-desk-tile--quiet .widget-control {
+	display: none;
 }
 
 .widget.shortcut-widget-box.fuse-desk-tile:hover .fuse-desk-tile__icon {
