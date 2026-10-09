@@ -13,7 +13,7 @@
 //   4. CSS lives in its own file, linked from here, so this stays small.
 // ============================================================================
 
-const BUILD_MARKER = 'v0.8.2-2026-08-25-even-tiles';
+const BUILD_MARKER = 'v0.9.0-2026-10-09-crm-tiles';
 
 frappe.pages['fuse-home'].on_page_load = function (wrapper) {
 	const page = frappe.ui.make_app_page({
@@ -228,6 +228,12 @@ class FuseHome {
 	// route, field defaults on a new document. Set immediately before navigating so
 	// nothing else can consume it first — Frappe clears it on use.
 	go(target) {
+		// Screens outside the desk (Frappe CRM's, at /crm) are a page load, not a route.
+		if (target.url) {
+			window.location.href = target.url;
+			return;
+		}
+
 		if (target.options) {
 			frappe.route_options = Object.assign({}, target.options);
 		}

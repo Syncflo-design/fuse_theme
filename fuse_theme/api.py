@@ -23,6 +23,35 @@ TRANSFER = "Material Transfer"
 WIP_ISSUE = "Material Transfer for Manufacture"
 
 TILES = [
+	# Selling, first because a job starts there: Frappe CRM's own screens, which live outside
+	# the desk (/crm), so these open by URL. Only on a site with Frappe CRM installed, and only
+	# for the people CRM itself lets in. Emoji like their neighbours; the SVG is for when the
+	# grid moves to an icon set.
+	{
+		"key": "crm_leads",
+		"module": "crm",
+		"label": "Leads",
+		"blurb": "New enquiries, qualified into deals",
+		"icon": "👤",
+		"svg": '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle>'
+		'<line x1="19" x2="19" y1="8" y2="14"></line><line x1="22" x2="16" y1="11" y2="11"></line>',
+		"url": "/crm/leads",
+		"requires_app": "crm",
+		"roles": ["Sales User", "Sales Manager", "System Manager"],
+	},
+	{
+		"key": "crm_deals",
+		"module": "crm",
+		"label": "CRM",
+		"blurb": "Deals, quotes and follow-ups",
+		"icon": "🤝",
+		"svg": '<path d="m11 17 2 2a1 1 0 1 0 3-3"></path><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0'
+		'l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"></path>'
+		'<path d="m21 3 1 11h-2"></path><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"></path><path d="M3 4h8"></path>',
+		"url": "/crm/deals",
+		"requires_app": "crm",
+		"roles": ["Sales User", "Sales Manager", "System Manager"],
+	},
 	{
 		# On the second row with BOMs and Projects rather than in the run of actions: this
 		# states what is needed, it does not move anything. The moving is Receiving's job,
@@ -289,6 +318,7 @@ def get_home():
 	roles = set(frappe.get_roles())
 	active = _active_modules()
 	hidden = _hidden_for_user()
+	installed = set(frappe.get_installed_apps())
 
 	tiles = []
 	for tile in _all_tiles():
@@ -304,20 +334,24 @@ def get_home():
 		# to name any.
 		if tile.get("roles") and not roles.intersection(tile["roles"]):
 			continue
-		if tile["route"][0] in ("List", "new") and not frappe.has_permission(tile["route"][1], "read"):
+		# A tile opens a desk route, or a URL for screens outside the desk (Frappe CRM's).
+		route = tile.get("route") or [None]
+		if route[0] in ("List", "new") and not frappe.has_permission(route[1], "read"):
 			continue
 		# A tile that creates something needs create rights, not just read. Otherwise it
 		# opens a form the user cannot save, which reads as a broken system rather than as
 		# a permission they do not have.
-		if tile["route"][0] == "new" and not frappe.has_permission(tile["route"][1], "create"):
+		if route[0] == "new" and not frappe.has_permission(route[1], "create"):
 			continue
 		# A tile belonging to another app is hidden when that app is not installed. A
 		# dead route reads as a broken system; a missing tile reads as a feature this
 		# site does not have, which is the truth.
 		if tile.get("requires_page") and not frappe.db.exists("Page", tile["requires_page"]):
 			continue
+		if tile.get("requires_app") and tile["requires_app"] not in installed:
+			continue
 		tiles.append(
-			{k: v for k, v in tile.items() if k not in ("roles", "requires_page", "module")}
+			{k: v for k, v in tile.items() if k not in ("roles", "requires_page", "requires_app", "module")}
 		)
 
 	return {
