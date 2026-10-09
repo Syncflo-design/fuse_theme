@@ -141,12 +141,14 @@ class FuseHome {
 			'</button>'
 		);
 
-		// .text(), not markup — the label is data from the server.
-		$card.find('.fuse-home__floor-label').text(floor.label || 'Shop floor');
-		$card.on('click', () => frappe.set_route(floor.route));
-
 		$footer.append('<div class="fuse-home__heading">Also here</div>');
-		if (floor && floor.route) $footer.append($card);
+		// No floor link when the shop floor is switched off or hidden from this login.
+		if (floor && floor.route) {
+			// .text(), not markup — the label is data from the server.
+			$card.find('.fuse-home__floor-label').text(floor.label || 'Shop floor');
+			$card.on('click', () => frappe.set_route(floor.route));
+			$footer.append($card);
+		}
 
 		// The guides. Same card, a book instead of a phone — help belongs where people
 		// already are, not behind a menu they have to be told about.
