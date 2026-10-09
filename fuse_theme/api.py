@@ -261,6 +261,23 @@ def _active_modules():
 		return {}
 
 
+def _hidden_for_user():
+	"""Fuse modules the current login's Module Profile keeps off its Fuse Home.
+
+	The switches in Intacct Settings say what the client has; this says what one login is
+	shown. It is what lets one demo site present a manufacturer and a contractor side by
+	side, each presenter seeing only their own industry. A launcher preference, like the
+	switches — document permissions still decide what the user may actually do.
+	"""
+	if not frappe.get_meta("Module Profile").has_field("fuse_hidden_modules"):
+		return set()
+	profile = frappe.db.get_value("User", frappe.session.user, "module_profile")
+	if not profile:
+		return set()
+	text = frappe.db.get_value("Module Profile", profile, "fuse_hidden_modules") or ""
+	return {key.strip() for key in text.replace(",", "\n").splitlines() if key.strip()}
+
+
 @frappe.whitelist()
 def get_home():
 	"""Tiles this user may actually use, plus what the header needs.
@@ -271,15 +288,17 @@ def get_home():
 	"""
 	roles = set(frappe.get_roles())
 	active = _active_modules()
+	hidden = _hidden_for_user()
 
 	tiles = []
 	for tile in _all_tiles():
-		# Switched off by the client under Active Modules in Intacct Settings. Checked
-		# first because it is a decision someone made deliberately, where a role or a
-		# permission miss is usually an oversight.
+		# Switched off by the client under Active Modules in Intacct Settings, or hidden from
+		# this login by its Module Profile. Checked first because both are decisions someone
+		# made deliberately, where a role or a permission miss is usually an oversight.
 		# The switch is usually the tile's own key, but not always: several tiles can belong
 		# to one module, and each still needs a key of its own to be replaceable.
-		if not active.get(tile.get("module", tile["key"]), True):
+		module = tile.get("module", tile["key"])
+		if not active.get(module, True) or module in hidden:
 			continue
 		# A tile that names no roles is for everyone — a contributed tile is not obliged
 		# to name any.
@@ -321,7 +340,7 @@ def get_home():
 		# None when fuse_manufacturing is not installed: the theme must run without
 		# it, and a dead link reads as a broken system.
 		"floor": {"route": "fuse-floor", "label": "Shop floor screens"}
-		if frappe.db.exists("Page", "fuse-floor") and active.get("shop_floor", True)
+		if frappe.db.exists("Page", "fuse-floor") and active.get("shop_floor", True) and "shop_floor" not in hidden
 		else None,
 		# Help, on every instance. The guides ship with the apps, so this is never a link to
 		# an empty page — which is what it would have been on any site nobody uploaded to.

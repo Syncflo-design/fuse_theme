@@ -333,6 +333,42 @@ def _set_default_workspace():
 	return len(users)
 
 
+def _module_profile_field():
+	"""A list of Fuse modules on each Module Profile, kept off Fuse Home for its users.
+
+	Rebuilt on every migrate so the keys in its description are always the ones this site
+	actually has — a module shipped later appears there without anyone editing this file.
+	"""
+	from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
+
+	try:
+		from fuse_core import modules
+
+		keys = ", ".join(module["key"] for module in modules.all_modules())
+	except Exception:
+		# The theme runs without fuse_core. The field still works; it just cannot list keys.
+		keys = ""
+
+	create_custom_fields(
+		{
+			"Module Profile": [
+				{
+					"fieldname": "fuse_hidden_modules",
+					"fieldtype": "Small Text",
+					"label": "Fuse Home: Hide These Modules",
+					"insert_after": "module_profile_name",
+					"description": (
+						"One Fuse module key per line. Their tiles leave Fuse Home for every user on "
+						"this profile; the site-wide switches in Intacct Settings are untouched."
+						+ (f" Keys on this site: {keys}." if keys else "")
+					),
+				}
+			]
+		},
+		ignore_validate=True,
+	)
+
+
 @frappe.whitelist()
 def after_install():
 	"""Put the site's theme-owned configuration in step with this version of the app.
@@ -361,6 +397,7 @@ def after_install():
 	_branding()
 	folder = _training_folder()
 	landed = _set_default_workspace()
+	_module_profile_field()
 
 	frappe.db.commit()
 	return {
