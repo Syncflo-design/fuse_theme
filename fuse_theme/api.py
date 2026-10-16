@@ -144,6 +144,22 @@ TILES = [
 		"roles": ["Stock Controller", "Manufacturing User", "Manufacturing Manager"],
 	},
 	{
+		# One operation of one works order, at the machine: who ran it, for how long, how many
+		# good and how many rejected. Beside Works Orders because the order says what to make
+		# and the card is where making it is recorded. Follows the Works Orders switch: a
+		# client who runs no works orders has no job cards either.
+		"key": "job_cards",
+		"module": "works_orders",
+		"label": "Job Cards",
+		"blurb": "Start, stop and record each operation",
+		"icon": "🗂",
+		"svg": '<rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect>'
+		'<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>'
+		'<path d="M12 11h4"></path><path d="M12 16h4"></path><path d="M8 11h.01"></path><path d="M8 16h.01"></path>',
+		"route": ["List", "Job Card"],
+		"roles": ["Stock Controller", "Manufacturing User", "Manufacturing Manager"],
+	},
+	{
 		"key": "wip_issue",
 		"label": "Issue to WIP",
 		# "WIP" rather than "work-in-progress": the tile is already called Issue to WIP, so
